@@ -1,18 +1,16 @@
-import paths # noqa
 from pathlib import Path
 from unittest import mock
-
 import pytest
-from helpers.stubs import RequestsStub
-from python_org import PythonOrg
+from tests.helpers.stubs import RequestsStub
+from job_search.domain.python_org import PythonOrg
 
 BASE_DIR = Path(__file__).parent
-A_JOB_POSTINGS = f'{BASE_DIR}/samples/job_posting.html'
-with open(A_JOB_POSTINGS) as f:
+with open(f'{BASE_DIR}/samples/job_posting.html') as f:
     SOME_JOBS = f.read()
-
 with open(f'{BASE_DIR}/samples/job_post.html') as f:
     A_JOB_POST = f.read()
+
+MOCK_REQUESTS = 'job_search.domain.python_org.requests'
 
 
 @pytest.fixture
@@ -21,7 +19,7 @@ def python_org():
 
 
 @pytest.fixture
-@mock.patch('python_org.requests')
+@mock.patch(MOCK_REQUESTS)
 def python_org_brewed(mock_requests):
     python_org = PythonOrg()
     mock_requests.get.return_value = RequestsStub(SOME_JOBS)
@@ -29,7 +27,7 @@ def python_org_brewed(mock_requests):
     return python_org
 
 
-@mock.patch('python_org.requests')
+@mock.patch(MOCK_REQUESTS)
 def test_givenAJobPosting_whenPreparingTheSoup_thenAllPagesShouldBeScraped(mock_requests, python_org):
     mock_requests.get.return_value = RequestsStub(SOME_JOBS)
     npages_expected = 2
@@ -39,7 +37,7 @@ def test_givenAJobPosting_whenPreparingTheSoup_thenAllPagesShouldBeScraped(mock_
     assert npages_expected == len(python_org.pages)
 
 
-@mock.patch('python_org.requests')
+@mock.patch(MOCK_REQUESTS)
 def test_givenABrewedPythonSoup_whenFetchingJobs_thenScrapeInfoFromAllJobs(mock_requests, python_org_brewed):
     mock_requests.get.return_value = RequestsStub(A_JOB_POST)
     a_job = {
