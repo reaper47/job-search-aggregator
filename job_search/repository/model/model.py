@@ -28,23 +28,20 @@ class Job(Base):
     description = Column(String)
     about = Column(PickleType)
 
-    source_id = Column(ForeignKey(f'{SOURCE_TABLE}.id'), nullable=False)
-    source = relationship('Source', backref=backref(JOB_TABLE, uselist=False))
-
     company_id = Column(ForeignKey(f'{COMPANY_TABLE}.id'), nullable=False)
-    company = relationship('Company', backref=backref(JOB_TABLE, uselist=False))
+    company = relationship('Company', backref=backref('job_company', uselist=False))
 
     location_id = Column(ForeignKey(f'{LOCATION_TABLE}.id'), nullable=False)
-    location = relationship('Location', backref=backref(JOB_TABLE, uselist=False))
+    location = relationship('Location', backref=backref('job_loc', uselist=False))
 
     contact_info_id = Column(ForeignKey(f'{CONTACT_INFO_TABLE}.id'))
-    contact_info = relationship('ContactInfo', backref=backref(JOB_TABLE, uselist=False))
+    contact_info = relationship('ContactInfo', backref=backref('job_contact', uselist=False))
 
-    restrictions = relationship('Restriction', backref=JOB_TABLE, lazy='dynamic')
-    requirements = relationship('Requirement', backref=JOB_TABLE, lazy='dynamic')
+    restrictions = relationship('Restriction', backref='job_restriction', lazy='dynamic')
+    requirements = relationship('Requirement', backref='job_requirement', lazy='dynamic')
 
     source_id = Column(ForeignKey(f'{SOURCE_TABLE}.id'), nullable=False)
-    source = relationship('Source', backref=backref(SOURCE_TABLE, uselist=False))
+    source = relationship('Source', backref=backref('job_src', uselist=False))
 
 
 class Company(Base):
@@ -59,13 +56,13 @@ class Location(Base):
 
     id = Column(Integer, primary_key=True)
     city_id = Column(ForeignKey(f'{CITY_TABLE}.id'), nullable=False)
-    city = relationship('City', backref=backref(LOCATION_TABLE, uselist=False))
+    city = relationship('City', backref=backref('loc_city', uselist=False))
 
     state_id = Column(ForeignKey(f'{STATE_TABLE}.id'))
-    state = relationship('State', backref=backref(LOCATION_TABLE, uselist=False))
+    state = relationship('State', backref=backref('loc_state', uselist=False))
 
-    country = Column(ForeignKey(f'{COUNTRY_TABLE}.id'), nullable=False)
-    country = relationship('Country', backref=backref(LOCATION_TABLE, uselist=False))
+    country_id = Column(ForeignKey(f'{COUNTRY_TABLE}.id'), nullable=False)
+    country = relationship('Country', backref=backref('loc_country', uselist=False))
 
 
 class City(Base):
@@ -94,7 +91,7 @@ class Restriction(Base):
 
     id = Column(Integer, primary_key=True)
     name_id = Column(ForeignKey(f'{RESTRICTION_NAME_TABLE}.id'))
-    name = relationship('RestrictionName', backref=backref(RESTRICTIONS_TABLE, uselist=False))
+    name = relationship('RestrictionName', backref=backref('restriction_name', uselist=False))
 
     job_id = Column(Integer, ForeignKey(f'{JOB_TABLE}.id'))
 
@@ -111,10 +108,10 @@ class Requirement(Base):
 
     id = Column(Integer, primary_key=True)
     name_id = Column(ForeignKey(f'{REQUIREMENT_NAME_TABLE}.id'))
-    name = relationship('RequirementName', backref=backref(REQUIREMENTS_TABLE, uselist=False))
+    name = relationship('RequirementName', backref=backref('requirement_name', uselist=False))
 
     job_id = Column(Integer, ForeignKey(f'{JOB_TABLE}.id'))
-    job = relationship('Job', backref=backref(REQUIREMENTS_TABLE, uselist=False))
+    job = relationship('Job', backref=backref('requirement_job', uselist=False))
 
 
 class RequirementName(Base):
