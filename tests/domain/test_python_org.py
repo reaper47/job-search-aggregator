@@ -45,8 +45,15 @@ def test_givenABrewedPythonSoup_whenFetchingJobs_thenScrapeInfoFromAllJobs(mock_
         'company': 'Tudor Investment Corporation',
         'location': 'New York, New York, United States',
         'description': 'We are looking for an outstanding engineer.',
-        'restrictions': ['No telecommuting', 'No Agencies Please'],
-        'requirements': ['Proficiency in Python', 'Experience in Python', 'Experience in C'],
+        'restrictions': [
+            'No telecommuting',
+            'No Agencies Please'
+        ],
+        'requirements': [
+            'Proficiency in Python',
+            'Experience in Python',
+            'Experience in C'
+        ],
         'about': [],
         'contact_info': {
             'contact': 'Morgan Nelson',
