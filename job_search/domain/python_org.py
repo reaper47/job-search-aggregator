@@ -1,6 +1,7 @@
-from typing import List, Dict
+from typing import List
 import requests
 from bs4 import BeautifulSoup, Tag
+from job_search.domain.job_type import JobInfoPython
 
 HTML = 'html.parser'
 
@@ -41,7 +42,7 @@ class PythonOrg:
 
         return len(pages)
 
-    def fetch_jobs(self) -> List[Dict]:
+    def fetch_jobs(self) -> List[JobInfoPython]:
         jobs_scraped = []
         for page in self.pages:
             all_jobs = page.find_all('ol', class_=self.jobs_class)[0].find_all('li')
@@ -55,21 +56,25 @@ class PythonOrg:
 
         return jobs_scraped
 
-    def __scrape_job(self, job: BeautifulSoup) -> Dict:
-        info = {}
+    def __scrape_job(self, job: BeautifulSoup) -> JobInfoPython:
         listing_company = self.__strip_list(job.find('span', 'company-name').text.split('\n'))
         descriptions = job.find('div', class_='job-description').find_all('h2')
 
-        info['title'] = descriptions[0].next_sibling.strip()
-        info['company'] = listing_company[1]
-        info['location'] = job.find('span', class_='listing-location').text
-        info['description'] = self.__get_child_tag(descriptions[1]).text
-        info['restrictions'] = self.__strip_list(self.__get_child_tag(descriptions[2]).text.split('\n'))
-        info['requirements'] = self._get_requirements(descriptions[3])
-        info['about'] = self.__get_about(descriptions[4])
-        info['contact_info'] = self.__get_contact_info(descriptions[5])
+        title_tag = descriptions[0]
+        descr_tag = descriptions[1]
+        restr_tag = descriptions[2]
+        reqs_tag = descriptions[3]
+        about_tag = descriptions[4]
+        contact_tag = descriptions[5]
 
-        return info
+        return JobInfoPython(title=title_tag.next_sibling.strip(),
+                             company=listing_company[1],
+                             location=job.find('span', class_='listing-location').text,
+                             description=self.__get_child_tag(descr_tag).text,
+                             restrictions=self.__strip_list(self.__get_child_tag(restr_tag).text.split('\n')),
+                             requirements=self._get_requirements(reqs_tag),
+                             about=self.__get_about(about_tag),
+                             contact_info=self.__get_contact_info(contact_tag))
 
     def _get_requirements(self, parent: BeautifulSoup) -> List:
         requirements = []

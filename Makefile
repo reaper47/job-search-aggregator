@@ -19,7 +19,7 @@ clean-test:
 	rm -fr htmlcov/
 	
 lint:
-	flake8 --exclude=venv* --statistics
+	flake8 --exclude=venv* --statistics --builtins="Job"
 	
 test:
 	pytest -vv --cov=. --ignore=tests/__init__.py
