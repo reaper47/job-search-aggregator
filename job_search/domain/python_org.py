@@ -1,8 +1,8 @@
 from typing import List
 import requests
 from bs4 import BeautifulSoup, Tag
+from job_search.domain.value_objects.simple_objects import ContactInfo, LocationInfo
 from job_search.domain.value_objects.job_type import JobInfoPython
-from job_search.domain.value_objects.contact_info import ContactInfo
 
 HTML = 'html.parser'
 
@@ -70,14 +70,27 @@ class PythonOrg:
 
         return JobInfoPython(title=title_tag.next_sibling.strip(),
                              company=listing_company[1],
-                             location=job.find('span', class_='listing-location').text,
+                             location=self.__get_location_info(job.find('span', class_='listing-location').text),
                              description=self.__get_child_tag(descr_tag).text,
                              restrictions=self.__strip_list(self.__get_child_tag(restr_tag).text.split('\n')),
-                             requirements=self._get_requirements(reqs_tag),
+                             requirements=self.__get_requirements(reqs_tag),
                              about=self.__get_about(about_tag),
                              contact_info=self.__get_contact_info(contact_tag))
 
-    def _get_requirements(self, parent: BeautifulSoup) -> List:
+
+    def __get_location_info(self, location: str) -> LocationInfo:
+        components = list(map(self.__strip, location.split(',')))
+
+        city, state, country = components[0], None, None
+        if len(components) == 3:
+            state, country = components[1], components[2]
+        else:
+            country = components[1]
+
+        return LocationInfo(city, state, country)
+
+
+    def __get_requirements(self, parent: BeautifulSoup) -> List:
         requirements = []
 
         child = self.__get_child_tag(parent)
@@ -125,4 +138,7 @@ class PythonOrg:
         return child
 
     def __strip_list(self, elements: List) -> List:
-        return list(map(lambda x: x.strip(), filter(lambda x: x.strip(), elements)))
+        return list(map(self.__strip, filter(self.__strip, elements)))
+
+    def __strip(self, x: str) -> str:
+        return x.strip()

@@ -1,11 +1,12 @@
-from typing import List, Dict
+from typing import List
+from job_search.domain.value_objects.simple_objects import ContactInfo, LocationInfo
 
 
 class JobInfo:
 
-    def __init__(self, title: str, company: str, location: str, description: str,
-                 restrictions: List[str], requirements: List[str],
-                 about: List[str], contact_info: Dict[str, str]):
+    def __init__(self, title: str, company: str, location: LocationInfo, 
+                 description: str, restrictions: List[str], requirements: List[str],
+                 about: List[str], contact_info: ContactInfo):
         self.title = title
         self.company = company
         self.location = location
