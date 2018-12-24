@@ -1,8 +1,8 @@
 from typing import List
 import requests
 from bs4 import BeautifulSoup, Tag
-from job_search.domain.value_objects.simple_objects import ContactInfo, LocationInfo
-from job_search.domain.value_objects.job_type import JobInfoPython
+from job_search.domain.jobs.value_objects.simple_objects import ContactInfo, LocationInfo
+from job_search.domain.jobs.value_objects.job_type import JobInfoPython
 
 HTML = 'html.parser'
 
@@ -51,8 +51,8 @@ class PythonOrg:
             for job in all_jobs:
                 link = job.find('span', class_='listing-company-name').find('a')['href']
                 job_request = requests.get(f'https://www.python.org{link}')
-                job_description = BeautifulSoup(job_request.text, features=HTML)
-                job_text = job_description.find('article', class_='text')
+                job_soup = BeautifulSoup(job_request.text, features=HTML)
+                job_text = job_soup.find('article', class_='text')
                 jobs_scraped.append(self.__scrape_job(job_text))
 
         return jobs_scraped
@@ -77,18 +77,14 @@ class PythonOrg:
                              about=self.__get_about(about_tag),
                              contact_info=self.__get_contact_info(contact_tag))
 
-
     def __get_location_info(self, location: str) -> LocationInfo:
         components = list(map(self.__strip, location.split(',')))
 
-        city, state, country = components[0], None, None
+        city, state, country = components[0], None, components[-1]
         if len(components) == 3:
-            state, country = components[1], components[2]
-        else:
-            country = components[1]
+            state = components[1]
 
         return LocationInfo(city, state, country)
-
 
     def __get_requirements(self, parent: BeautifulSoup) -> List:
         requirements = []

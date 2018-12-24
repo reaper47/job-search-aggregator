@@ -1,9 +1,9 @@
 from sqlalchemy import create_engine, exc
 from sqlalchemy.orm import sessionmaker
-from model.model import Job, Company, Restriction
+from entities.job_entity import Job, Company, Restriction
 
 
-engine = create_engine('sqlite:///app.db', echo=True)
+engine = create_engine('sqlite:///database/app.db', echo=True)
 Session = sessionmaker(bind=engine)
 session = Session()
 
