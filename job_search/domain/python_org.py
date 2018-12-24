@@ -1,7 +1,8 @@
 from typing import List
 import requests
 from bs4 import BeautifulSoup, Tag
-from job_search.domain.job_type import JobInfoPython
+from job_search.domain.value_objects.job_type import JobInfoPython
+from job_search.domain.value_objects.contact_info import ContactInfo
 
 HTML = 'html.parser'
 
@@ -103,19 +104,19 @@ class PythonOrg:
         while child.name != 'ul':
             child = self.__get_child_tag(child)
         ul = self.__strip_list(child.text.split('\n'))
+        fields = list(map(lambda x: x.split(':', 1), ul))
 
-        info = {}
-        bits = list(map(lambda x: x.split(':'), ul))
-        contact_idx = [i for i, s in enumerate(bits) if s[0] == 'Contact']
-        email_idx = [i for i, s in enumerate(bits) if 'E-mail' in s[0]]
-        website_idx = [i for i, s in enumerate(bits) if 'Web' in s[0]]
-
-        fields = [('contact', contact_idx), ('email', email_idx), ('website', website_idx)]
+        contact, email, website = None, None, None
         for field in fields:
-            name, idx = field[0], field[1]
-            info[name] = '' if not idx else ul[idx[0]].split(':', 1)[1].strip()
+            name, value = field[0].lower(), field[1].strip()
+            if name == 'contact':
+                contact = value
+            elif 'e-mail' in name:
+                email = value
+            elif 'web' in name:
+                website = value
 
-        return info
+        return ContactInfo(contact=contact, email=email, website=website)
 
     def __get_child_tag(self, parent: BeautifulSoup) -> str:
         child = parent.next_sibling

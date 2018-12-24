@@ -3,7 +3,8 @@ from unittest import mock
 import pytest
 from tests.helpers.stubs import RequestsStub
 from job_search.domain.python_org import PythonOrg
-from job_search.domain.job_type import JobInfoPython
+from job_search.domain.value_objects.job_type import JobInfoPython
+from job_search.domain.value_objects.contact_info import ContactInfo
 
 BASE_DIR = Path(__file__).parent
 with open(f'{BASE_DIR}/samples/job_posting.html') as f:
@@ -48,9 +49,8 @@ def test_givenABrewedPythonSoup_whenFetchingJobs_thenScrapeInfoFromAllJobs(mock_
                           restrictions=['No telecommuting', 'No Agencies Please'],
                           requirements=['Proficiency in Python', 'Experience in Python', 'Experience in C'],
                           about=[],
-                          contact_info={'contact': 'Morgan Nelson',
-                                        'email': 'morgan.nelson@tudor.com',
-                                        'website': 'https://boards.greenhouse.io/'})
+                          contact_info=ContactInfo(contact='Morgan Nelson', email='morgan.nelson@tudor.com',
+                                                   website='https://boards.greenhouse.io/'))
     jobs_expected = [a_job]*4
 
     jobs = python_org_brewed.fetch_jobs()
