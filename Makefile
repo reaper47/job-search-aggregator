@@ -17,10 +17,13 @@ clean-test:
 	rm -fr .tox/
 	rm -f .coverage
 	rm -fr htmlcov/
-	
+
+db:
+	python3 ./job_search/repository/jobs/entities/job_entity.py
+
 lint:
 	flake8 --exclude=venv* --statistics --builtins="Job"
-	
+
 test:
 	pytest -vv --cov=. --ignore=tests/__init__.py
 

@@ -2,7 +2,7 @@ from pathlib import Path
 from sqlalchemy import create_engine, ForeignKey, Column
 from sqlalchemy import Integer, String, PickleType
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship
 
 JOB_TABLE = 'job'
 COMPANY_TABLE = 'company'
@@ -28,20 +28,20 @@ class JobEntity(Base):
     description = Column(String)
     about = Column(PickleType)
 
-    company_id = Column(ForeignKey(f'{COMPANY_TABLE}.id'), nullable=False)
-    company = relationship('CompanyEntity', backref=backref('job_company', uselist=False))
+    company_id = Column(Integer, ForeignKey(f'{COMPANY_TABLE}.id'), nullable=False)
+    company_entity = relationship('CompanyEntity', backref='job_company', uselist=False)
 
-    location_id = Column(ForeignKey(f'{LOCATION_TABLE}.id'), nullable=False)
-    location = relationship('LocationEntity', backref=backref('job_loc', uselist=False))
+    location_id = Column(Integer, ForeignKey(f'{LOCATION_TABLE}.id'), nullable=False)
+    location_entity = relationship('LocationEntity', backref='job_loc', uselist=False)
 
-    contact_info_id = Column(ForeignKey(f'{CONTACT_INFO_TABLE}.id'))
-    contact_info = relationship('ContactInfoEntity', backref=backref('job_contact', uselist=False))
+    contact_info_id = Column(Integer, ForeignKey(f'{CONTACT_INFO_TABLE}.id'))
+    contact_info_entity = relationship('ContactInfoEntity', backref='job_contact', uselist=False)
 
-    restrictions = relationship('RestrictionEntity', backref='job_restriction', lazy='dynamic')
-    requirements = relationship('RequirementEntity', backref='job_requirement', lazy='dynamic')
+    restrictions_entity = relationship('RestrictionEntity', backref='job_restriction', uselist=False)
+    requirements_entity = relationship('RequirementEntity', backref='job_requirement', uselist=False)
 
-    source_id = Column(ForeignKey(f'{SOURCE_TABLE}.id'), nullable=False)
-    source = relationship('SourceEntity', backref=backref('job_src', uselist=False))
+    source_id = Column(Integer, ForeignKey(f'{SOURCE_TABLE}.id'), nullable=False)
+    source_entity = relationship('SourceEntity', backref='job_src', uselist=False)
 
 
 class CompanyEntity(Base):
@@ -55,14 +55,14 @@ class LocationEntity(Base):
     __tablename__ = LOCATION_TABLE
 
     id = Column(Integer, primary_key=True)
-    city_id = Column(ForeignKey(f'{CITY_TABLE}.id'), nullable=False)
-    city = relationship('CityEntity', backref=backref('loc_city', uselist=False))
+    city_id = Column(Integer, ForeignKey(f'{CITY_TABLE}.id'), nullable=False)
+    city_entity = relationship('CityEntity', backref='loc_city', uselist=False)
 
-    state_id = Column(ForeignKey(f'{STATE_TABLE}.id'))
-    state = relationship('StateEntity', backref=backref('loc_state', uselist=False))
+    state_id = Column(Integer, ForeignKey(f'{STATE_TABLE}.id'))
+    state_entity = relationship('StateEntity', backref='loc_state', uselist=False)
 
-    country_id = Column(ForeignKey(f'{COUNTRY_TABLE}.id'), nullable=False)
-    country = relationship('CountryEntity', backref=backref('loc_country', uselist=False))
+    country_id = Column(Integer, ForeignKey(f'{COUNTRY_TABLE}.id'), nullable=False)
+    country_entity = relationship('CountryEntity', backref='loc_country', uselist=False)
 
 
 class CityEntity(Base):
@@ -90,9 +90,7 @@ class RestrictionEntity(Base):
     __tablename__ = RESTRICTIONS_TABLE
 
     id = Column(Integer, primary_key=True)
-    name_id = Column(ForeignKey(f'{RESTRICTION_NAME_TABLE}.id'))
-    name = relationship('RestrictionNameEntity', backref=backref('restriction_name', uselist=False))
-
+    name_entities = relationship('RestrictionNameEntity', backref='restriction_name', lazy=True)
     job_id = Column(Integer, ForeignKey(f'{JOB_TABLE}.id'))
 
 
@@ -101,17 +99,15 @@ class RestrictionNameEntity(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
+    restriction_id = Column(Integer, ForeignKey(f'{RESTRICTIONS_TABLE}.id'))
 
 
 class RequirementEntity(Base):
     __tablename__ = REQUIREMENTS_TABLE
 
     id = Column(Integer, primary_key=True)
-    name_id = Column(ForeignKey(f'{REQUIREMENT_NAME_TABLE}.id'))
-    name = relationship('RequirementNameEntity', backref=backref('requirement_name', uselist=False))
-
+    name_entities = relationship('RequirementNameEntity', backref='requirement_name', lazy=True)
     job_id = Column(Integer, ForeignKey(f'{JOB_TABLE}.id'))
-    job = relationship('JobEntity', backref=backref('requirement_job', uselist=False))
 
 
 class RequirementNameEntity(Base):
@@ -119,6 +115,7 @@ class RequirementNameEntity(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
+    requirement_id = Column(Integer, ForeignKey(f'{REQUIREMENTS_TABLE}.id'))
 
 
 class ContactInfoEntity(Base):
@@ -138,6 +135,10 @@ class SourceEntity(Base):
 
 
 if __name__ == '__main__':
-    BASE_DIR = Path(__file__).parent
-    engine = create_engine(f'sqlite:///{BASE_DIR}/../app.db', echo=True)
+    import os
+    db_dir = f'{Path(__file__).parent}/../../database/'
+    if not os.path.exists(db_dir):
+        os.makedirs(db_dir)
+
+    engine = create_engine(f'sqlite:///{db_dir}/app.db', echo=True)
     Base.metadata.create_all(engine)
