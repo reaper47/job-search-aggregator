@@ -4,7 +4,7 @@ from job_search.domain.jobs.value_objects.job_type import JobInfoPython
 
 a_title = 'Pythonista'
 a_company = 'Python Café'
-a_location = LocationInfo(city='Quebec City', state='Quebec', country='Canada')
+a_location = LocationInfo(city='Montreal', state='Quebec', country='Canada')
 a_description = 'This is a gold mine.'
 some_restrictions = ['No telecommuting', 'No remote work available']
 some_requirements = ['Degree in computer science', 'Deep knowledge of Python 3']
