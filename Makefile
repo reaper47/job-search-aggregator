@@ -18,7 +18,7 @@ clean-test:
 	rm -f .coverage
 	rm -fr htmlcov/
 
-db:
+init_db:
 	python3 ./job_search/repository/jobs/entities/job_entity.py
 
 lint:

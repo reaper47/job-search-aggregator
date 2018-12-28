@@ -50,5 +50,28 @@ class SQLiteJobRepository(JobRepository):
     def find_country(self, country):
         return self.session.query(entities.CountryEntity).filter_by(name=country).first()
 
+    def find_contact_info(self, info):
+        name_entity = self.find_contact_name(info.contact)
+        email_entity = self.find_contact_email(info.email)
+        website_entity = self.find_contact_website(info.website)
+
+        try:
+            return (self.session.query(entities.ContactInfoEntity)
+                                .filter_by(contact_id=name_entity.id,
+                                           email_id=email_entity.id,
+                                           website_id=website_entity.id)
+                                .first())
+        except AttributeError:
+            return None
+
+    def find_contact_name(self, name):
+        return self.session.query(entities.ContactNameEntity).filter_by(name=name).first()
+
+    def find_contact_email(self, email):
+        return self.session.query(entities.ContactEmailEntity).filter_by(name=email).first()
+
+    def find_contact_website(self, website):
+        return self.session.query(entities.ContactWebsiteEntity).filter_by(name=website).first()
+
     def find_source(self, source):
         return self.session.query(entities.SourceEntity).filter_by(name=source).first()

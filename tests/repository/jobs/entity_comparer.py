@@ -33,6 +33,6 @@ def __are_requirements_equivalent(requirements: List[str], requirements_entity: 
 
 
 def __are_contacts_equivalent(contact_info: ContactInfo, contact_info_entity: ContactInfoEntity) -> bool:
-    return (contact_info.contact == contact_info_entity.contact and
-            contact_info.email == contact_info_entity.email and
-            contact_info.website == contact_info_entity.website)
+    return (contact_info.contact == contact_info_entity.name_entity.name and
+            contact_info.email == contact_info_entity.email_entity.name and
+            contact_info.website == contact_info_entity.website_entity.name)

@@ -16,7 +16,12 @@ def test_givenANormalJobEntity_whenAssemblingAJob_thenReturnTheExpectedJob():
     some_restrictions = entities.RestrictionEntity(name_entities=restrictions)
     requirements = [entities.RequirementNameEntity(name=str(i)) for i in range(10)]
     some_requirements = entities.RequirementEntity(name_entities=requirements)
-    a_contact_info = entities.ContactInfoEntity(contact='a contact', email='gimme@moar.no', website='goals.com')
+    contact_name_entity = entities.ContactNameEntity(name='a contact')
+    contact_email_entity = entities.ContactEmailEntity(name='gimme@moar.no')
+    contact_website_entity = entities.ContactWebsiteEntity(name='goals.com')
+    a_contact_info = entities.ContactInfoEntity(name_entity=contact_name_entity,
+                                                email_entity=contact_email_entity,
+                                                website_entity=contact_website_entity)
     a_job_entity = entities.JobEntity(title=a_title, description=a_description, about=an_about,
                                       company_entity=a_company, location_entity=a_location,
                                       restrictions_entity=some_restrictions,

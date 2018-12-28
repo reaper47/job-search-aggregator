@@ -1,6 +1,6 @@
 import job_search.repository.jobs.entities.job_entity as entities
 from job_search.domain.jobs.value_objects.job_type import JobInfo
-from job_search.domain.jobs.value_objects.simple_objects import LocationInfo
+from job_search.domain.jobs.value_objects.simple_objects import ContactInfo, LocationInfo
 from job_search.domain.jobs.job_repository import JobRepository
 
 
@@ -12,22 +12,14 @@ class JobEntityFactory:
     def create_job_entity(self, job: JobInfo) -> entities.JobEntity:
         company = self.__assemble_company_entity(job.company)
         source = self.__assemble_source_entity(job.source)
-
-        '''city = entities.CityEntity(name=job.location.city)
-        state = entities.StateEntity(name=job.location.state)
-        country = self.__assemble_country_entity(job.location.country)
-        location = entities.LocationEntity(city_entity=city, state_entity=state, country_entity=country)'''
         location = self.__assemble_location_entity(job.location)
+        contact_info = self.__assemble_contact_info_entity(job.contact_info)
 
         restriction_names = [entities.RestrictionNameEntity(name=x) for x in job.restrictions]
         restrictions = entities.RestrictionEntity(name_entities=restriction_names)
 
         requirement_names = [entities.RequirementNameEntity(name=x) for x in job.requirements]
         requirements = entities.RequirementEntity(name_entities=requirement_names)
-
-        contact_info = entities.ContactInfoEntity(contact=job.contact_info.contact,
-                                                  email=job.contact_info.email,
-                                                  website=job.contact_info.website)
 
         return entities.JobEntity(title=job.title,
                                   description=job.description,
@@ -73,3 +65,24 @@ class JobEntityFactory:
                                                       country_entity=country_entity)
 
         return location_entity
+
+    def __assemble_contact_info_entity(self, info: ContactInfo) -> entities.ContactInfoEntity:
+        contact_info_entity = self.repository.find_contact_info(info)
+        if contact_info_entity is None:
+            name_entity = self.repository.find_contact_name(info.contact)
+            if name_entity is None:
+                name_entity = entities.ContactNameEntity(name=info.contact)
+
+            email_entity = self.repository.find_contact_email(info.email)
+            if email_entity is None:
+                email_entity = entities.ContactEmailEntity(name=info.email)
+
+            website_entity = self.repository.find_contact_website(info.website)
+            if website_entity is None:
+                website_entity = entities.ContactWebsiteEntity(name=info.website)
+
+            contact_info_entity = entities.ContactInfoEntity(name_entity=name_entity,
+                                                             email_entity=email_entity,
+                                                             website_entity=website_entity)
+
+        return contact_info_entity

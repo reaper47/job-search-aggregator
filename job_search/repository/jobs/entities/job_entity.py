@@ -8,6 +8,9 @@ JOB_TABLE = 'job'
 COMPANY_TABLE = 'company'
 LOCATION_TABLE = 'location'
 CONTACT_INFO_TABLE = 'contact_info'
+CONTACT_NAME_TABLE = 'contact_name'
+CONTACT_EMAIL_TABLE = 'contact_email'
+CONTACT_WEBSITE_TABLE = 'contact_website'
 SOURCE_TABLE = 'source'
 CITY_TABLE = 'city'
 STATE_TABLE = 'state'
@@ -122,9 +125,35 @@ class ContactInfoEntity(Base):
     __tablename__ = CONTACT_INFO_TABLE
 
     id = Column(Integer, primary_key=True)
-    contact = Column(String)
-    email = Column(String)
-    website = Column(String)
+    contact_id = Column(Integer, ForeignKey(f'{CONTACT_NAME_TABLE}.id'))
+    name_entity = relationship('ContactNameEntity', backref='contact_name', uselist=False)
+
+    email_id = Column(Integer, ForeignKey(f'{CONTACT_EMAIL_TABLE}.id'))
+    email_entity = relationship('ContactEmailEntity', backref='contact_email', uselist=False)
+
+    website_id = Column(Integer, ForeignKey(f'{CONTACT_WEBSITE_TABLE}.id'))
+    website_entity = relationship('ContactWebsiteEntity', backref='contact_website', uselist=False)
+
+
+class ContactNameEntity(Base):
+    __tablename__ = CONTACT_NAME_TABLE
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+
+
+class ContactEmailEntity(Base):
+    __tablename__ = CONTACT_EMAIL_TABLE
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+
+
+class ContactWebsiteEntity(Base):
+    __tablename__ = CONTACT_WEBSITE_TABLE
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
 
 
 class SourceEntity(Base):

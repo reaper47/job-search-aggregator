@@ -35,6 +35,10 @@ def repo_empty_mock():
     mock.find_city.return_value = None
     mock.find_state.return_value = None
     mock.find_country.return_value = None
+    mock.find_contact_info.return_value = None
+    mock.find_contact_name.return_value = None
+    mock.find_contact_email.return_value = None
+    mock.find_contact_website.return_value = None
     mock.find_source.return_value = None
     return mock
 
