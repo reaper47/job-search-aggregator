@@ -4,10 +4,16 @@ from job_search.domain.jobs.value_objects.job_type import JobInfoPython
 from job_search.domain.jobs.value_objects.simple_objects import LocationInfo, ContactInfo
 from job_search.domain.jobs.job_repository import JobRepository
 from job_search.repository.jobs.job_entity_factory import JobEntityFactory
+from job_search.repository.jobs.entities.job_entity import (RestrictionEntity, RestrictionNameEntity,
+                                                            RequirementEntity, RequirementNameEntity)
 from tests.repository.jobs import entity_comparer
 
 A_COMPANY = 'Python Café'
 A_COUNTRY = 'Canada'
+A_RESTRICTION = 'No telecommuting'
+ANOTHER_RESTRICTION = 'No remote work available'
+A_REQUIREMENT = 'Degree in computer science'
+ANOTHER_REQUIREMENT = 'Deep knowledge of Python 3'
 
 
 @pytest.fixture
@@ -16,8 +22,8 @@ def a_job():
     a_company = A_COMPANY
     a_location = LocationInfo(city='Quebec City', state='Quebec', country=A_COUNTRY)
     a_description = 'This is a gold mine.'
-    some_restrictions = ['No telecommuting', 'No remote work available']
-    some_requirements = ['Degree in computer science', 'Deep knowledge of Python 3']
+    some_restrictions = [A_RESTRICTION, ANOTHER_RESTRICTION]
+    some_requirements = [A_REQUIREMENT, ANOTHER_REQUIREMENT]
     an_about = ['Python Café is the number one company in providing caffeine to its employees']
     a_contact_info = ContactInfo(contact='Mr. Joshua', email='josh@python.org', website='https://www.pcafe.org')
 
@@ -39,6 +45,20 @@ def repo_empty_mock():
     mock.find_contact_name.return_value = None
     mock.find_contact_email.return_value = None
     mock.find_contact_website.return_value = None
+    mock.find_restrictions.return_value = {
+        'found': [
+            RestrictionEntity(name_entity=RestrictionNameEntity(name=A_RESTRICTION)),
+            RestrictionEntity(name_entity=RestrictionNameEntity(name=ANOTHER_RESTRICTION))
+        ],
+        'not_found': []
+    }
+    mock.find_requirements.return_value = {
+        'found': [
+            RequirementEntity(name_entity=RequirementNameEntity(name=A_REQUIREMENT)),
+            RequirementEntity(name_entity=RequirementNameEntity(name=ANOTHER_REQUIREMENT))
+        ],
+        'not_found': []
+    }
     mock.find_source.return_value = None
     return mock
 

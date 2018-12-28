@@ -28,16 +28,16 @@ class SQLiteJobRepository(JobRepository):
         return self.session.query(entities.CompanyEntity).filter_by(name=company).first()
 
     def find_location(self, location):
-        city_entity = self.find_city(location.city)
-        state_entity = self.find_state(location.state)
-        country_entity = self.find_country(location.country)
-
         try:
-            return (self.session.query(entities.LocationEntity)
-                                .filter_by(city_id=city_entity.id,
-                                           state_id=state_entity.id,
-                                           country_id=country_entity.id)
-                                .first())
+            city_entity = self.find_city(location.city)
+            state_entity = self.find_state(location.state)
+            country_entity = self.find_country(location.country)
+            location_entity = (self.session.query(entities.LocationEntity)
+                                           .filter_by(city_id=city_entity.id,
+                                                      state_id=state_entity.id,
+                                                      country_id=country_entity.id)
+                                           .first())
+            return location_entity
         except AttributeError:
             return None
 
@@ -51,16 +51,16 @@ class SQLiteJobRepository(JobRepository):
         return self.session.query(entities.CountryEntity).filter_by(name=country).first()
 
     def find_contact_info(self, info):
-        name_entity = self.find_contact_name(info.contact)
-        email_entity = self.find_contact_email(info.email)
-        website_entity = self.find_contact_website(info.website)
-
         try:
-            return (self.session.query(entities.ContactInfoEntity)
-                                .filter_by(contact_id=name_entity.id,
-                                           email_id=email_entity.id,
-                                           website_id=website_entity.id)
-                                .first())
+            name_entity = self.find_contact_name(info.contact)
+            email_entity = self.find_contact_email(info.email)
+            website_entity = self.find_contact_website(info.website)
+            contact_info_entity = (self.session.query(entities.ContactInfoEntity)
+                                               .filter_by(contact_id=name_entity.id,
+                                                          email_id=email_entity.id,
+                                                          website_id=website_entity.id)
+                                               .first())
+            return contact_info_entity
         except AttributeError:
             return None
 
@@ -72,6 +72,39 @@ class SQLiteJobRepository(JobRepository):
 
     def find_contact_website(self, website):
         return self.session.query(entities.ContactWebsiteEntity).filter_by(name=website).first()
+
+    def find_restrictions(self, restrictions):
+        found, not_found = [], []
+        for name in restrictions:
+            name_entity = (self.session.query(entities.RestrictionNameEntity)
+                                       .filter_by(name=name)
+                                       .first())
+            if name_entity is None:
+                not_found.append(name)
+            else:
+                restriction_entity = (self.session.query(entities.RestrictionEntity)
+                                          .filter_by(name_id=name_entity.id)
+                                          .first())
+                found.append(restriction_entity)
+
+        return {'found': found, 'not_found': not_found}
+
+    def find_requirements(self, requirements):
+        found, not_found = [], []
+        for name in requirements:
+            name_entity = (self.session.query(entities.RequirementNameEntity)
+                                       .filter_by(name=name)
+                                       .first())
+
+            if name_entity is None:
+                not_found.append(name)
+            else:
+                requirement_entity = (self.session.query(entities.RequirementEntity)
+                                                  .filter_by(name_id=name_entity.id)
+                                                  .first())
+                found.append(requirement_entity)
+
+        return {'found': found, 'not_found': not_found}
 
     def find_source(self, source):
         return self.session.query(entities.SourceEntity).filter_by(name=source).first()

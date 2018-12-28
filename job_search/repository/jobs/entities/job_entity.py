@@ -15,9 +15,11 @@ SOURCE_TABLE = 'source'
 CITY_TABLE = 'city'
 STATE_TABLE = 'state'
 COUNTRY_TABLE = 'country'
-REQUIREMENTS_TABLE = 'requirement'
-RESTRICTIONS_TABLE = 'restriction'
+REQUIREMENTS_TABLE = 'requirements'
+REQUIREMENT_TABLE = 'requirement'
 REQUIREMENT_NAME_TABLE = 'requirement_name'
+RESTRICTIONS_TABLE = 'restrictions'
+RESTRICTION_TABLE = 'restriction'
 RESTRICTION_NAME_TABLE = 'restriction_name'
 
 Base = declarative_base()
@@ -40,8 +42,8 @@ class JobEntity(Base):
     contact_info_id = Column(Integer, ForeignKey(f'{CONTACT_INFO_TABLE}.id'))
     contact_info_entity = relationship('ContactInfoEntity', backref='job_contact', uselist=False)
 
-    restrictions_entity = relationship('RestrictionEntity', backref='job_restriction', uselist=False)
-    requirements_entity = relationship('RequirementEntity', backref='job_requirement', uselist=False)
+    restrictions_entity = relationship('RestrictionsEntity', backref='job_restriction', uselist=False)
+    requirements_entity = relationship('RequirementsEntity', backref='job_requirement', uselist=False)
 
     source_id = Column(Integer, ForeignKey(f'{SOURCE_TABLE}.id'), nullable=False)
     source_entity = relationship('SourceEntity', backref='job_src', uselist=False)
@@ -89,12 +91,22 @@ class CountryEntity(Base):
     name = Column(String, nullable=False, unique=True)
 
 
-class RestrictionEntity(Base):
+class RestrictionsEntity(Base):
     __tablename__ = RESTRICTIONS_TABLE
 
     id = Column(Integer, primary_key=True)
-    name_entities = relationship('RestrictionNameEntity', backref='restriction_name', lazy=True)
+    restriction_entities = relationship('RestrictionEntity', backref='restrictions_name', lazy=True)
     job_id = Column(Integer, ForeignKey(f'{JOB_TABLE}.id'))
+
+
+class RestrictionEntity(Base):
+    __tablename__ = RESTRICTION_TABLE
+
+    id = Column(Integer, primary_key=True)
+    name_id = Column(Integer, ForeignKey(f'{RESTRICTION_NAME_TABLE}.id'))
+    name_entity = relationship('RestrictionNameEntity', backref='restriction_name', uselist=False)
+
+    restriction_id = Column(Integer, ForeignKey(f'{RESTRICTIONS_TABLE}.id'))
 
 
 class RestrictionNameEntity(Base):
@@ -102,23 +114,31 @@ class RestrictionNameEntity(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-    restriction_id = Column(Integer, ForeignKey(f'{RESTRICTIONS_TABLE}.id'))
 
 
-class RequirementEntity(Base):
+class RequirementsEntity(Base):
     __tablename__ = REQUIREMENTS_TABLE
 
     id = Column(Integer, primary_key=True)
-    name_entities = relationship('RequirementNameEntity', backref='requirement_name', lazy=True)
+    requirement_entities = relationship('RequirementEntity', backref='requirements_name', lazy=True)
     job_id = Column(Integer, ForeignKey(f'{JOB_TABLE}.id'))
+
+
+class RequirementEntity(Base):
+    __tablename__ = REQUIREMENT_TABLE
+
+    id = Column(Integer, primary_key=True)
+    name_id = Column(Integer, ForeignKey(f'{REQUIREMENT_NAME_TABLE}.id'))
+    name_entity = relationship('RequirementNameEntity', backref='requirement_name', uselist=False)
+
+    requirement_id = Column(Integer, ForeignKey(f'{REQUIREMENTS_TABLE}.id'))
 
 
 class RequirementNameEntity(Base):
     __tablename__ = REQUIREMENT_NAME_TABLE
 
     id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
-    requirement_id = Column(Integer, ForeignKey(f'{REQUIREMENTS_TABLE}.id'))
+    name = Column(String)
 
 
 class ContactInfoEntity(Base):

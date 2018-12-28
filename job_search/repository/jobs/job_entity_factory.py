@@ -1,3 +1,4 @@
+from typing import List
 import job_search.repository.jobs.entities.job_entity as entities
 from job_search.domain.jobs.value_objects.job_type import JobInfo
 from job_search.domain.jobs.value_objects.simple_objects import ContactInfo, LocationInfo
@@ -14,12 +15,8 @@ class JobEntityFactory:
         source = self.__assemble_source_entity(job.source)
         location = self.__assemble_location_entity(job.location)
         contact_info = self.__assemble_contact_info_entity(job.contact_info)
-
-        restriction_names = [entities.RestrictionNameEntity(name=x) for x in job.restrictions]
-        restrictions = entities.RestrictionEntity(name_entities=restriction_names)
-
-        requirement_names = [entities.RequirementNameEntity(name=x) for x in job.requirements]
-        requirements = entities.RequirementEntity(name_entities=requirement_names)
+        restrictions = self.__assemble_restrictions(job.restrictions)
+        requirements = self.__assemble_requirements(job.requirements)
 
         return entities.JobEntity(title=job.title,
                                   description=job.description,
@@ -86,3 +83,37 @@ class JobEntityFactory:
                                                              website_entity=website_entity)
 
         return contact_info_entity
+
+    def __assemble_restrictions(self, restrictions: List[str]) -> entities.RestrictionsEntity:
+        restrictions_in_repo = self.repository.find_restrictions(restrictions)
+        restriction_entities = restrictions_in_repo['found']
+        not_found = restrictions_in_repo['not_found']
+
+        new_restriction_entities = []
+        for entity in restriction_entities:
+            new_entity = entities.RestrictionEntity(name_id=entity.name_entity.id, name_entity=entity.name_entity)
+            new_restriction_entities.append(new_entity)
+
+        if not_found:
+            new_name_entities = [entities.RestrictionNameEntity(name=x) for x in not_found]
+            new_entities = [entities.RestrictionEntity(name_entity=x) for x in new_name_entities]
+            new_restriction_entities.extend(new_entities)
+
+        return entities.RestrictionsEntity(restriction_entities=new_restriction_entities)
+
+    def __assemble_requirements(self, requirements: List[str]) -> entities.RequirementsEntity:
+        requirements_in_repo = self.repository.find_requirements(requirements)
+        requirement_entities = requirements_in_repo['found']
+        not_found = requirements_in_repo['not_found']
+
+        new_requirement_entities = []
+        for entity in requirement_entities:
+            new_entity = entities.RequirementEntity(name_id=entity.name_entity.id, name_entity=entity.name_entity)
+            new_requirement_entities.append(new_entity)
+
+        if not_found:
+            new_name_entities = [entities.RequirementNameEntity(name=x) for x in not_found]
+            new_entities = [entities.RequirementEntity(name_entity=x) for x in new_name_entities]
+            new_requirement_entities.extend(new_entities)
+
+        return entities.RequirementsEntity(requirement_entities=new_requirement_entities)

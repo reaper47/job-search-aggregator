@@ -1,4 +1,5 @@
 import abc
+from typing import Dict, List
 from job_search.domain.jobs.value_objects.job_type import JobInfo
 from job_search.domain.jobs.value_objects.simple_objects import ContactInfo, LocationInfo
 import job_search.repository.jobs.entities.job_entity as entities
@@ -49,6 +50,14 @@ class JobRepository(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def find_contact_website(self, website: str) -> entities.ContactWebsiteEntity:
         raise NotImplementedError('find_contact_website is not implemented')
+
+    @abc.abstractmethod
+    def find_restrictions(self, restrictions: List[str]) -> Dict:
+        raise NotImplementedError('find_restrictions is not implemented')
+
+    @abc.abstractmethod
+    def find_requirements(self, requirements: List[str]) -> Dict:
+        raise NotImplementedError('find_requirements is not impemented')
 
     @abc.abstractmethod
     def find_source(self, source: str) -> entities.SourceEntity:

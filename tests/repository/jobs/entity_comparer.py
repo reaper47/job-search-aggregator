@@ -23,12 +23,14 @@ def __are_locations_equivalent(location_info: LocationInfo, location_entity: Loc
 
 
 def __are_restrictions_equivalent(restrictions: List[str], restrictions_entity: List[RestrictionEntity]) -> bool:
-    restrictions_entity = [x.name for x in restrictions_entity.name_entities]
-    return set(restrictions) == set(restrictions_entity)
+    restriction_entities = restrictions_entity.restriction_entities
+    restriction_name_entities = [x.name_entity.name for x in restriction_entities]
+    return set(restrictions) == set(restriction_name_entities)
 
 
 def __are_requirements_equivalent(requirements: List[str], requirements_entity: List[RequirementEntity]) -> bool:
-    requirements_entity = [x.name for x in requirements_entity.name_entities]
+    requirement_entities = requirements_entity.requirement_entities
+    requirements_entity = [x.name_entity.name for x in requirement_entities]
     return set(requirements) == set(requirements_entity)
 
 
