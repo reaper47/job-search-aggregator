@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, exc
 from sqlalchemy.orm import sessionmaker
 from job_search.domain.jobs.job_repository import JobRepository
 import job_search.repository.jobs.entities.job_entity as entities
@@ -18,8 +18,11 @@ class SQLiteJobRepository(JobRepository):
 
     def persist(self, job):
         job_entity = self.entity_factory.create_job_entity(job)
-        self.session.add(job_entity)
-        self.session.commit()
+        try:
+            self.session.add(job_entity)
+            self.session.commit()
+        except exc.IntegrityError:
+            print(f"Job '{job_entity.id}' already exists in the database.")
 
     def load(self):
         pass

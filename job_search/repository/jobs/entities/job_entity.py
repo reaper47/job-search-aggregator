@@ -28,7 +28,7 @@ Base = declarative_base()
 class JobEntity(Base):
     __tablename__ = JOB_TABLE
 
-    id = Column(Integer, primary_key=True)
+    id = Column(String, autoincrement=False, nullable=False, primary_key=True)
     title = Column(String)
     description = Column(String)
     about = Column(PickleType)

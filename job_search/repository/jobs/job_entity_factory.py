@@ -1,4 +1,5 @@
 from typing import List
+from urllib.parse import urlparse
 import job_search.repository.jobs.entities.job_entity as entities
 from job_search.domain.jobs.value_objects.job_type import JobInfo
 from job_search.domain.jobs.value_objects.simple_objects import ContactInfo, LocationInfo
@@ -11,6 +12,7 @@ class JobEntityFactory:
         self.repository = repository
 
     def create_job_entity(self, job: JobInfo) -> entities.JobEntity:
+        uid = self.__generate_uid(job.source, str(job.location), job.company, job.title)
         company = self.__assemble_company_entity(job.company)
         source = self.__assemble_source_entity(job.source)
         location = self.__assemble_location_entity(job.location)
@@ -18,7 +20,8 @@ class JobEntityFactory:
         restrictions = self.__assemble_restrictions(job.restrictions)
         requirements = self.__assemble_requirements(job.requirements)
 
-        return entities.JobEntity(title=job.title,
+        return entities.JobEntity(id=uid,
+                                  title=job.title,
                                   description=job.description,
                                   about=job.about,
                                   company_entity=company,
@@ -27,6 +30,25 @@ class JobEntityFactory:
                                   restrictions_entity=restrictions,
                                   requirements_entity=requirements,
                                   source_entity=source)
+
+    def __generate_uid(self, source: str, location: str, company: str, title: str) -> str:
+        source_name = urlparse(source).netloc.split('.')[1]
+        source_initials = source_name[:2].upper()
+
+        location_split = [y for x in location.split(',') for y in x.split(' ')]
+        location_split = self.__rm_empty_strings(location_split)
+        location_initials = ''.join([x[0].upper() for x in location_split])
+
+        company_split = self.__rm_empty_strings(company.split(' '))
+        company_initials = ''.join([x[0].upper() for x in company_split])
+
+        title_split = self.__rm_empty_strings(title.split(' '))
+        title_initials = ''.join([x[0].upper() for x in title_split])
+
+        return f'{source_initials}-{location_initials}-{company_initials}-{title_initials}'
+
+    def __rm_empty_strings(self, strings: List[str]) -> List[str]:
+        return list(filter(lambda x: x, strings))
 
     def __assemble_company_entity(self, company: str) -> entities.CompanyEntity:
         entity = self.repository.find_company(company)

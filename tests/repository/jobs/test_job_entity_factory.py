@@ -68,3 +68,12 @@ def test_givenAJobWithUniqueValues_whenAssemblingAJobEntity_thenAssembleCorrectl
     job_entity = assembler.create_job_entity(a_job)
 
     assert entity_comparer.are_equivalent(a_job, job_entity)
+
+
+def test_whenAssemblingAJobEntity_thenGenerateAUniqueId(a_job, repo_empty_mock):
+    uid_expected = 'PY-QCQC-PC-P'
+
+    assembler = JobEntityFactory(repo_empty_mock)
+    job_entity = assembler.create_job_entity(a_job)
+
+    assert uid_expected == job_entity.id

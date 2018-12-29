@@ -22,3 +22,9 @@ class LocationInfo:
         return (self.city == other.city and
                 self.state == other.state and
                 self.country == other.country)
+
+    def __str__(self):
+        string = f'{self.city}, '
+        if self.state is not None:
+            string += f'{self.state}, '
+        return string + f'{self.country}'
