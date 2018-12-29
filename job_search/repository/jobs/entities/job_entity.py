@@ -63,7 +63,7 @@ class LocationEntity(Base):
     city_id = Column(Integer, ForeignKey(f'{CITY_TABLE}.id'), nullable=False)
     city_entity = relationship('CityEntity', backref='loc_city', uselist=False)
 
-    state_id = Column(Integer, ForeignKey(f'{STATE_TABLE}.id'))
+    state_id = Column(Integer, ForeignKey(f'{STATE_TABLE}.id'), nullable=True)
     state_entity = relationship('StateEntity', backref='loc_state', uselist=False)
 
     country_id = Column(Integer, ForeignKey(f'{COUNTRY_TABLE}.id'), nullable=False)
@@ -81,7 +81,7 @@ class StateEntity(Base):
     __tablename__ = STATE_TABLE
 
     id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
+    name = Column(String, nullable=True)
 
 
 class CountryEntity(Base):
