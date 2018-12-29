@@ -1,6 +1,4 @@
 from job_search.repository.jobs.sqlite_job_repository import SQLiteJobRepository
-from job_search.domain.jobs.value_objects.simple_objects import ContactInfo, LocationInfo
-from job_search.domain.jobs.value_objects.job_type import JobInfoPython
 from job_search.domain.jobs.python_org import PythonOrg
 
 repository = SQLiteJobRepository()
