@@ -1,0 +1,2 @@
+[run]
+omit = ./job_search/domain/jobs/job_repository.py 

@@ -4,8 +4,10 @@ beautifulsoup4==4.6.3
 certifi==2018.11.29
 chardet==3.0.4
 coverage==4.5.2
+coverage-badge==0.2.0
 flake8==3.6.0
 idna==2.8
+-e git+https://github.com/reaper47/job-search-aggregator.git@0db2f5d3eb8052fc55b2074c694e49615c08878a#egg=job_search
 mccabe==0.6.1
 more-itertools==4.3.0
 pluggy==0.8.0
