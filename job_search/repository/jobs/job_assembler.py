@@ -15,11 +15,13 @@ class JobAssembler:
                                    email=job_entity.contact_info_entity.email_entity.name,
                                    website=job_entity.contact_info_entity.website_entity.name)
 
-        return JobInfo(title=job_entity.title,
+        return JobInfo(uid=job_entity.id,
+                       title=job_entity.title,
                        company=job_entity.company_entity.name,
                        location=location,
                        description=job_entity.description,
                        restrictions=restrictions,
                        requirements=requirements,
                        about=job_entity.about,
-                       contact_info=contact_info)
+                       contact_info=contact_info,
+                       source=job_entity.source_entity.name)

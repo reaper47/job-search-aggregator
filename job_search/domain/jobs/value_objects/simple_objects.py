@@ -1,3 +1,27 @@
+from typing import Dict, List
+
+
+class Job:
+
+    def __init__(self, title: str, company: str, location: str,
+                 description: str, restrictions: List[str], requirements: List[str],
+                 about: List[str], contact_info: Dict[str, str]):
+        self.title = title
+        self.company = company
+        self.location = location
+        self.description = description
+        self.restrictions = restrictions
+        self.requirements = requirements
+        self.about = about
+        self.contact_info = contact_info
+
+    def __eq__(self, other):
+        for a, b in zip(self.__dict__.values(), other.__dict__.values()):
+            if a != b:
+                return False
+        return True
+
+
 class ContactInfo:
 
     def __init__(self, contact: str, email: str, website: str):

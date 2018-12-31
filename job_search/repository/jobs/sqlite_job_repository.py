@@ -24,8 +24,16 @@ class SQLiteJobRepository(JobRepository):
         except exc.IntegrityError:
             print(f"Job '{job_entity.id}' already exists in the database.")
 
-    def load(self):
-        pass
+    def load(self, job_id):
+        try:
+            job_found = self.session.query(entities.JobEntity).filter_by(id=job_id)
+            return self.assembler.to_domain_object(job_found)
+        except AttributeError:
+            return None
+
+    def load_all_job(self):
+        all_jobs = self.session.query(entities.JobEntity).all()
+        return [self.assembler.to_domain_object(x) for x in all_jobs]
 
     def find_company(self, company):
         return self.session.query(entities.CompanyEntity).filter_by(name=company).first()

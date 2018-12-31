@@ -12,7 +12,11 @@ class JobRepository(metaclass=abc.ABCMeta):
         raise NotImplementedError('persist is not implemented')
 
     @abc.abstractmethod
-    def load(self) -> JobInfo:
+    def load(self, job_id: str) -> JobInfo:
+        raise NotImplementedError('load is not implemented')
+
+    @abc.abstractmethod
+    def load_all_jobs(self) -> List[JobInfo]:
         raise NotImplementedError('load is not implemented')
 
     @abc.abstractmethod

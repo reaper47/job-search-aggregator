@@ -1,7 +1,7 @@
 from unittest.mock import Mock
 import pytest
-from job_search.domain.jobs.value_objects.job_type import JobInfoPython
-from job_search.domain.jobs.value_objects.simple_objects import LocationInfo, ContactInfo
+from job_search.domain.jobs.value_objects.job_type import JobInfo, JobTypeSource
+from job_search.domain.jobs.value_objects.simple_objects import ContactInfo, LocationInfo
 from job_search.domain.jobs.job_repository import JobRepository
 from job_search.repository.jobs.job_entity_factory import JobEntityFactory
 from job_search.repository.jobs.entities.job_entity import (RestrictionEntity, RestrictionNameEntity,
@@ -17,7 +17,8 @@ ANOTHER_REQUIREMENT = 'Deep knowledge of Python 3'
 
 
 @pytest.fixture
-def a_job():
+def a_job() -> JobInfo:
+    uid = 'PY-QCQC-PC-P'
     a_title = 'Pythonista'
     a_company = A_COMPANY
     a_location = LocationInfo(city='Quebec City', state='Quebec', country=A_COUNTRY)
@@ -26,15 +27,17 @@ def a_job():
     some_requirements = [A_REQUIREMENT, ANOTHER_REQUIREMENT]
     an_about = ['Python Café is the number one company in providing caffeine to its employees']
     a_contact_info = ContactInfo(contact='Mr. Joshua', email='josh@python.org', website='https://www.pcafe.org')
+    a_source = JobTypeSource.PYTHON_ORG.value
 
-    return JobInfoPython(title=a_title, company=a_company,
-                         location=a_location, description=a_description,
-                         restrictions=some_restrictions, about=an_about,
-                         requirements=some_requirements, contact_info=a_contact_info)
+    return JobInfo(uid=uid, title=a_title, company=a_company,
+                   location=a_location, description=a_description,
+                   restrictions=some_restrictions, about=an_about,
+                   requirements=some_requirements, contact_info=a_contact_info,
+                   source=a_source)
 
 
 @pytest.fixture
-def repo_empty_mock():
+def mock_empty_repo():
     mock = Mock(spec=JobRepository)
     mock.find_company.return_value = None
     mock.find_location.return_value = None
@@ -63,17 +66,8 @@ def repo_empty_mock():
     return mock
 
 
-def test_givenAJobWithUniqueValues_whenAssemblingAJobEntity_thenAssembleCorrectly(a_job, repo_empty_mock):
-    assembler = JobEntityFactory(repo_empty_mock)
+def test_givenAJobWithUniqueValues_whenAssemblingAJobEntity_thenAssembleCorrectly(a_job, mock_empty_repo):
+    assembler = JobEntityFactory(mock_empty_repo)
     job_entity = assembler.create_job_entity(a_job)
 
     assert entity_comparer.are_equivalent(a_job, job_entity)
-
-
-def test_whenAssemblingAJobEntity_thenGenerateAUniqueId(a_job, repo_empty_mock):
-    uid_expected = 'PY-QCQC-PC-P'
-
-    assembler = JobEntityFactory(repo_empty_mock)
-    job_entity = assembler.create_job_entity(a_job)
-
-    assert uid_expected == job_entity.id

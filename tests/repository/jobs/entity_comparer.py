@@ -6,14 +6,16 @@ from job_search.repository.jobs.entities.job_entity import (JobEntity, ContactIn
 
 
 def are_equivalent(job_info: JobInfo, job_entity: JobEntity) -> bool:
-    return (job_info.title == job_entity.title and
+    return (job_info.uid == job_entity.id and
+            job_info.title == job_entity.title and
             job_info.company == job_entity.company_entity.name and
             __are_locations_equivalent(job_info.location, job_entity.location_entity) and
             job_info.description == job_entity.description and
             __are_restrictions_equivalent(job_info.restrictions, job_entity.restrictions_entity) and
             __are_requirements_equivalent(job_info.requirements, job_entity.requirements_entity) and
             job_info.about == job_entity.about and
-            __are_contacts_equivalent(job_info.contact_info, job_entity.contact_info_entity))
+            __are_contacts_equivalent(job_info.contact_info, job_entity.contact_info_entity) and
+            job_info.source == job_entity.source_entity.name)
 
 
 def __are_locations_equivalent(location_info: LocationInfo, location_entity: LocationEntity) -> bool:
