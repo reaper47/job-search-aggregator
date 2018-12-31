@@ -1,2 +1,4 @@
 [run]
-omit = ./job_search/domain/jobs/job_repository.py 
+omit = 
+    ./job_search/domain/jobs/job_repository.py 
+    venv/*
