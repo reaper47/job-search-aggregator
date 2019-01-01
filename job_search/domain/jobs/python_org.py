@@ -57,7 +57,6 @@ class PythonOrg:
         return jobs_scraped
 
     def __scrape_job(self, job: BeautifulSoup) -> Job:
-        listing_company = self.__strip_list(job.find('span', 'company-name').text.split('\n'))
         descriptions = job.find('div', class_='job-description').find_all('h2')
 
         title_tag = descriptions[0]
@@ -66,9 +65,10 @@ class PythonOrg:
         reqs_tag = descriptions[3]
         about_tag = descriptions[4]
         contact_tag = descriptions[5]
+        company_tag = job.find('span', 'company-name')
 
         return Job(title=title_tag.next_sibling.strip(),
-                   company=listing_company[1],
+                   company=self.__strip_list(company_tag.text.split('\n'))[-1],
                    location=job.find('span', class_='listing-location').text,
                    description=self.__get_child_tag(descr_tag).text,
                    restrictions=self.__strip_list(self.__get_child_tag(restr_tag).text.split('\n')),

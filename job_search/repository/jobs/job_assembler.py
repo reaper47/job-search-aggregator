@@ -24,4 +24,5 @@ class JobAssembler:
                        requirements=requirements,
                        about=job_entity.about,
                        contact_info=contact_info,
-                       source=job_entity.source_entity.name)
+                       source=job_entity.source_entity.name,
+                       pinned=job_entity.pinned)

@@ -24,17 +24,14 @@ clean-test:
 install:
 	${PIP} install -r requirements.txt
 	${PIP} install -e .
-	make init_db
+	make db
 	make clean
 
-init_db:
+db:
 	${PY} ./job_search/repository/jobs/entities/job_entity.py
 
 run:
 	${PY} ./job_search/interface/gui/job_search_aggregator.py
-
-run2:
-	${PY} ./job_search/interface/gui/main.py
 
 lint:
 	flake8 --exclude=venv* --statistics --builtins="Job"

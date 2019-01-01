@@ -1,6 +1,6 @@
 from pathlib import Path
 from sqlalchemy import create_engine, ForeignKey, Column
-from sqlalchemy import Integer, String, PickleType
+from sqlalchemy import Integer, String, Boolean, PickleType
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -47,6 +47,8 @@ class JobEntity(Base):
 
     source_id = Column(Integer, ForeignKey(f'{SOURCE_TABLE}.id'), nullable=False)
     source_entity = relationship('SourceEntity', backref='job_src', uselist=False)
+
+    pinned = Column(Boolean, default=False)
 
 
 class CompanyEntity(Base):

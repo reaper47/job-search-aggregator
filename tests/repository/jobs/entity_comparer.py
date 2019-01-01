@@ -15,7 +15,8 @@ def are_equivalent(job_info: JobInfo, job_entity: JobEntity) -> bool:
             __are_requirements_equivalent(job_info.requirements, job_entity.requirements_entity) and
             job_info.about == job_entity.about and
             __are_contacts_equivalent(job_info.contact_info, job_entity.contact_info_entity) and
-            job_info.source == job_entity.source_entity.name)
+            job_info.source == job_entity.source_entity.name and
+            job_info.pinned == job_entity.pinned)
 
 
 def __are_locations_equivalent(location_info: LocationInfo, location_entity: LocationEntity) -> bool:

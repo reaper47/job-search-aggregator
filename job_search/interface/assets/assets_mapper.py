@@ -6,6 +6,6 @@ IMG_DIR = f'{DIR}/img'
 
 
 class AssetsMapper(Enum):
-    APP_ICON = f'{IMG_DIR}/icon.png'
+    APP_ICON = f'{IMG_DIR}/sign.png'
     PINNED = f'{IMG_DIR}/pinned.png'
     PINNED_SELECTED = f'{IMG_DIR}/pinned_selected.png'

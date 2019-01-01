@@ -15,10 +15,11 @@ def test_givenANormalJobEntity_whenAssemblingAJob_thenReturnTheExpectedJob():
     some_restrictions = __make_some_restrictions()
     some_requirements = __make_some_requirements()
     a_contact_info = __make_a_contact_info()
+    is_pinned = False
     a_job_entity = entities.JobEntity(title=a_title, description=a_description, about=an_about,
                                       company_entity=a_company, location_entity=a_location,
                                       restrictions_entity=some_restrictions,
-                                      requirements_entity=some_requirements,
+                                      requirements_entity=some_requirements, pinned=is_pinned,
                                       contact_info_entity=a_contact_info, source_entity=a_source)
 
     assembler = JobAssembler()

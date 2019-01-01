@@ -1,88 +1,62 @@
-from PySide2.QtWidgets import (QLabel, QWidget, QGridLayout, QMainWindow,
-                               QHBoxLayout, QListWidget, QListWidgetItem)
+from PySide2.QtCore import Qt
+from PySide2.QtGui import QColor, QPalette
+from PySide2.QtWidgets import QListView
+from job_search.interface.gui.widgets.list_item import ItemModel, ItemDelegate, Item
+from job_search.interface.gui.styles.styles import Styles, Color
+from job_search.domain.jobs.value_objects.job_type import JobInfo
 
 
-class QJobListItemWidget(QWidget):
-
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.title = QLabel()
-        self.company = QLabel()
-        self.location = QLabel()
-
-        vlayout = QGridLayout()
-        vlayout.addWidget(self.title, 0, 0, 1, 2)
-        vlayout.addWidget(self.company, 1, 0, 1, 2)
-        vlayout.addWidget(self.location, 0, 1, 1, 1, 2)
-        vlayout.setSpacing(20)
-
-        self.allQHBoxLayout = QHBoxLayout()
-        self.iconQLabel = QLabel()
-        self.allQHBoxLayout.addLayout(vlayout, 0)
-        self.setLayout(self.allQHBoxLayout)
-
-        self.title.setStyleSheet('color: rgb(0, 0, 255); float:right;')
-        self.location.setStyleSheet('color: rgb(255, 0, 0);')
-
-    def set_title(self, text):
-        self.title.setText(text)
-
-    def set_location(self, text):
-        self.location.setText(text)
-
-    def set_company(self, imagePath):
-        self.company.setText(imagePath)
-
-
-class JobsListWidget(QMainWindow):
+class ListView(QListView):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("QListView with QItemDelegate")
-        self.setStyleSheet("""QMainWindow {
-                                background: #fff;
-                              }
-                              QMainWindow::separator {
-                                height: 0;
-                                border: none;
-                                width: 0;
-                              }""")
-        self.setUnifiedTitleAndToolBarOnMac(True)
+        self.selected = 0
+        self.setStyleSheet(Styles.QLIST_VIEW.value)
+        self.setLayoutDirection(Qt.RightToLeft)
 
-        self.job_list = QListWidget(self)
+        color = QColor(Color.GREY.value)
+        palette = QPalette()
+        palette.setColor(QPalette.Highlight, color)
+        self.setPalette(palette)
 
-        items = [
-            (
-                'Python Backend\nDeveloper',
-                'Biarri\n',
-                'Brisbane, Queensland, Australia'
-            ),
-            (
-                'Web Developer\n(Django/ Python)',
-                'Newcastle\nUniversity',
-                'Newcastle-upon-Tyne,\nTyne and Wear,\nUnited Kingdom'
-            ),
-            (
-                'Senior Infrastructure\nDeveloper (Python)',
-                'Bromium',
-                'Cambridge, Cambridgeshire,\nUnited Kingdom'
-            )
-        ]*10
+        self.model = ItemModel(0, 1, self)
+        self.setModel(self.model)
+        self.setItemDelegate(ItemDelegate())
+        self.model.rowsAboutToBeRemoved.connect(self.__items_deleted)
 
-        self.job_list.selectionModel().currentChanged.connect(self.on_row_changed)
+    def __items_deleted(self):
+        self.setCurrentIndex(self.model.index(self.selected))
 
-        for index, name, icon in items:
-            job_item = QJobListItemWidget()
-            job_item.set_title(index)
-            job_item.set_location(name)
-            job_item.set_company(icon)
+    def append(self, job: JobInfo):
+        item = self.__build_item(job)
+        self.model.addItem(item)
 
-            list_item_widget = QListWidgetItem(self.job_list)
-            list_item_widget.setSizeHint(job_item.sizeHint())
-            self.job_list.addItem(list_item_widget)
-            self.job_list.setItemWidget(list_item_widget, job_item)
+    def insert(self, job: JobInfo, row: int):
+        self.selected = row
+        item = self.__build_item(job)
+        self.model.insertItem(item, row)
+        self.setCurrentIndex(self.model.index(row))
 
-        self.setCentralWidget(self.job_list)
+    def update(self, job: JobInfo):
+        item = self.__build_item(job)
+        self.model.updateItem(self.currentIndex(), item)
 
-    def on_row_changed(self, current, previous):
-        print(current)
+    def __build_item(self, job: JobInfo) -> Item:
+        return Item(title=job.title,
+                    company=job.company,
+                    location=str(job.location),
+                    pinned=job.pinned)
+
+    def clear(self):
+        self.model.clear()
+
+    def select(self, row: int):
+        if 0 <= row < self.model.rowCount():
+            self.setCurrentIndex(self.model.index(row))
+            self.selected = row
+
+    def remove(self, row: int):
+        self.model.removeItem(row)
+        count = self.model.rowCount()
+        self.selected = row if row < count else row - 1
+        self.setCurrentIndex(self.model.index(self.selected))

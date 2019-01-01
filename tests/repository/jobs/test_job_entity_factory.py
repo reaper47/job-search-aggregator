@@ -28,12 +28,13 @@ def a_job() -> JobInfo:
     an_about = ['Python Café is the number one company in providing caffeine to its employees']
     a_contact_info = ContactInfo(contact='Mr. Joshua', email='josh@python.org', website='https://www.pcafe.org')
     a_source = JobTypeSource.PYTHON_ORG.value
+    is_pinned = False
 
     return JobInfo(uid=uid, title=a_title, company=a_company,
                    location=a_location, description=a_description,
                    restrictions=some_restrictions, about=an_about,
                    requirements=some_requirements, contact_info=a_contact_info,
-                   source=a_source)
+                   source=a_source, pinned=is_pinned)
 
 
 @pytest.fixture

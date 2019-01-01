@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, exc
+from sqlalchemy import create_engine, exc, desc
 from sqlalchemy.orm import sessionmaker
 from job_search.domain.jobs.job_repository import JobRepository
 import job_search.repository.jobs.entities.job_entity as entities
@@ -22,17 +22,22 @@ class SQLiteJobRepository(JobRepository):
             self.session.add(job_entity)
             self.session.commit()
         except exc.IntegrityError:
+            self.session.rollback()
             print(f"Job '{job_entity.id}' already exists in the database.")
 
     def load(self, job_id):
         try:
-            job_found = self.session.query(entities.JobEntity).filter_by(id=job_id)
+            job_found = (self.session.query(entities.JobEntity)
+                                     .filter_by(id=job_id)
+                                     .first())
             return self.assembler.to_domain_object(job_found)
         except AttributeError:
             return None
 
-    def load_all_job(self):
-        all_jobs = self.session.query(entities.JobEntity).all()
+    def load_all_jobs(self):
+        all_jobs = (self.session.query(entities.JobEntity)
+                                .order_by(desc(entities.JobEntity.id))
+                                .all())
         return [self.assembler.to_domain_object(x) for x in all_jobs]
 
     def find_company(self, company):

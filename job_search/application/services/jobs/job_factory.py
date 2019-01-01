@@ -20,7 +20,8 @@ class JobFactory:
                        requirements=job.requirements,
                        about=job.about,
                        contact_info=contact_info,
-                       source=job_type)
+                       source=job_type.value,
+                       pinned=False)
 
     def __generate_id(self, source: str, location: str, company: str, title: str) -> str:
         source_name = urlparse(source).netloc.split('.')[1]
