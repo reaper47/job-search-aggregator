@@ -1,5 +1,6 @@
 PY = python3
 PIP = pip3
+COV_BADGE = ./tests/.caverage.svg
 
 clean: clean-build clean-pyc clean-test
 
@@ -41,3 +42,5 @@ test:
 
 coverage:
 	pytest -vv --cov=. --cov-report=html
+	rm -f ${COV_BADGE}
+	coverage-badge -o ${COV_BADGE}
