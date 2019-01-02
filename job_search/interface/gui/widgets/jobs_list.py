@@ -2,7 +2,7 @@ from PySide2.QtCore import Qt
 from PySide2.QtGui import QColor, QPalette
 from PySide2.QtWidgets import QListView
 from job_search.interface.gui.widgets.list_item import ItemModel, ItemDelegate, Item
-from job_search.interface.gui.styles.styles import Styles, Color
+from job_search.interface.gui.styles.styles import Style, Color
 from job_search.domain.jobs.value_objects.job_type import JobInfo
 
 
@@ -11,8 +11,9 @@ class ListView(QListView):
     def __init__(self):
         super().__init__()
         self.selected = 0
-        self.setStyleSheet(Styles.QLIST_VIEW.value)
+        self.setStyleSheet(Style.QLIST_VIEW.value)
         self.setLayoutDirection(Qt.RightToLeft)
+        self.setAlternatingRowColors(True)
 
         color = QColor(Color.GREY.value)
         palette = QPalette()
@@ -42,10 +43,18 @@ class ListView(QListView):
         self.model.updateItem(self.currentIndex(), item)
 
     def __build_item(self, job: JobInfo) -> Item:
-        return Item(title=job.title,
-                    company=job.company,
-                    location=str(job.location),
+        nchars = 30 if job.pinned else 35
+        title = self.__cap(job.title, nchars)
+        company = self.__cap(job.company, 35)
+        location = self.__cap(str(job.location), 42)
+
+        return Item(title=title,
+                    company=company,
+                    location=location,
                     pinned=job.pinned)
+
+    def __cap(self, text: str, nchars: int) -> str:
+        return text if len(text) <= nchars else text[:nchars] + '…'
 
     def clear(self):
         self.model.clear()

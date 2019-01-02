@@ -3,7 +3,7 @@ from PySide2.QtWidgets import QMainWindow, QDesktopWidget, QApplication, QDockWi
 from PySide2.QtCore import Qt
 from PySide2.QtGui import QIcon, QKeySequence
 from job_search.interface.assets.assets_mapper import AssetsMapper
-from job_search.interface.gui.styles.styles import Styles
+from job_search.interface.gui.styles.styles import Style
 from job_search.interface.gui.widgets.info_panel import JobInfoPanel
 from job_search.interface.gui.widgets.jobs_list import ListView
 from job_search.application.services.jobs.job_service import JobService
@@ -15,7 +15,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setStyleSheet(Styles.QMAIN_WINDOW.value)
+        self.setStyleSheet(Style.QMAIN_WINDOW.value)
         self.setWindowTitle('Job Search Aggregator')
         self.setWindowIcon(QIcon(AssetsMapper.APP_ICON.value))
 

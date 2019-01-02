@@ -4,9 +4,15 @@ from enum import Enum
 class Color(Enum):
     GREY = '#999'
     LIGHT_BLACK = '#2C3A47'
+    ITEM_SELECTED = '#fed330'
+    ITEM_NOT_SELECTED = '#333'
+    TITLE = '#212121'
+    LOCATION = '#00796B'
+    COMPANY = '#455A64'
 
 
-class Styles(Enum):
+class Style(Enum):
+    FONT_SIZE = 12
     QMAIN_WINDOW = """
         QMainWindow {
             background: #FFF;

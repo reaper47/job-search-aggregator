@@ -1,8 +1,9 @@
 import copy
 from PySide2.QtCore import QModelIndex, QAbstractListModel, Qt, QSize
-from PySide2.QtGui import QColor, QImage
+from PySide2.QtGui import QColor, QImage, QBrush
 from PySide2.QtWidgets import QStyledItemDelegate, QStyleOptionViewItem, QStyle
 from job_search.interface.assets.assets_mapper import AssetsMapper
+from job_search.interface.gui.styles.styles import Style, Color
 
 
 class Item:
@@ -22,42 +23,43 @@ class ItemModel(QAbstractListModel):
         super().__init__()
         self.items = []
 
-    def addItem(self, item):
-        self.beginInsertRows(QModelIndex(), self.rowCount(), self.rowCount())
+    def addItem(self, item: Item):
+        nrows = self.rowCount()
+        self.beginInsertRows(QModelIndex(), nrows, nrows)
         self.items.append(item)
         self.endInsertRows()
 
     def clear(self):
         self.beginRemoveRows(QModelIndex(), 0, self.rowCount() - 1)
-        self.items = []
+        del self.items[:]
         self.endRemoveRows()
 
-    def data(self, index, role=Qt.DisplayRole):
-        if not index.isValid():
-            return None
-
-        if 0 <= index.row() < self.rowCount():
-            item = self.items[index.row()]
-
+    def data(self, index: QModelIndex, role=Qt.DisplayRole):
+        item = self.getItem(index)
+        if item is not None:
             if role == Qt.SizeHintRole:
                 return QSize(100, 80)
             elif role == ItemModel.TitleRole:
                 return item.title
             elif role == ItemModel.CompanyRole:
-                if item.company:
-                    return item.company
-                return None
+                return item.company
             elif role == ItemModel.LocationRole:
-                print(item.location)
+                return item.location
             elif role == ItemModel.PinRole:
                 return item.pinned
 
-    def getItem(self, index):
+    def getItem(self, index: QModelIndex):
         row = index.row()
-        if index.isValid() and 0 <= row < self.rowCount():
+        if self.__is_index_valid(index):
             return self.items[row]
 
-    def insertItem(self, item, index):
+    def __is_index_valid(self, index: QModelIndex) -> bool:
+        return index.isValid() and 0 <= index.row() < self.rowCount()
+
+    def rowCount(self, index=QModelIndex()):
+        return len(self.items)
+
+    def insertItem(self, item: Item, index: QModelIndex):
         self.beginInsertRows(QModelIndex(), index, index)
         self.items.insert(index, item)
         self.endInsertRows()
@@ -67,16 +69,13 @@ class ItemModel(QAbstractListModel):
         del self.items[row]
         self.endRemoveRows()
 
-    def rowCount(self, index=QModelIndex()):
-        return len(self.items)
-
-    def setData(self, index, item, role=Qt.EditRole):
-        self.items[index.row()] = item
-        self.dataChanged.emit(index, index, [ItemModel.TitleRole,
-                              ItemModel.CompanyRole, ItemModel.PinRole])
-
-    def updateItem(self, index, item):
+    def updateItem(self, index: QModelIndex, item: Item):
         self.setData(index, item)
+
+    def setData(self, index: QModelIndex, item: Item, role=Qt.EditRole):
+        self.items[index.row()] = item
+        self.dataChanged.emit(index, index, [ItemModel.TitleRole, ItemModel.CompanyRole,
+                                             ItemModel.LocationRole, ItemModel.PinRole])
 
 
 class ItemDelegate(QStyledItemDelegate):
@@ -90,55 +89,66 @@ class ItemDelegate(QStyledItemDelegate):
         style.drawControl(QStyle.CE_ItemViewItem, options, painter)
         painter.save()
 
-        color = QColor()
+        rectangle = option.rect
+
         if option.state & QStyle.State_Selected:
-            color.setNamedColor("#FFF")
-            painter.setPen(color)
             pin = QImage(AssetsMapper.PINNED_SELECTED.value)
+            painter.fillRect(rectangle, QBrush(QColor(Color.ITEM_SELECTED.value)))
         else:
-            color.setNamedColor("#333")
-            painter.setPen(color)
             pin = QImage(AssetsMapper.PINNED.value)
 
-        pin.setDevicePixelRatio(2.0)
-        title = index.data(ItemModel.TitleRole)
-        company = index.data(ItemModel.CompanyRole)
-        pinned = index.data(ItemModel.PinRole)
-        font = painter.font()
-        font.setPixelSize(16)
-        painter.setFont(font)
-        rectangle = option.rect
         rectangle.setX(10)
+        pin.setDevicePixelRatio(2.0)
+        font = painter.font()
+        font.setPixelSize(Style.FONT_SIZE.value)
+        painter.setFont(font)
         pin_rect = copy.copy(rectangle)
         pin_rect.setHeight(32)
         pin_rect.setWidth(32)
+        yoffset = 42
 
-        if title:
-            pin_point = rectangle.topLeft()
-            pin_point.setY(pin_point.y() + 32)
-            pin_rect.setTopLeft(pin_point)
+        # Draw title
+        title = index.data(ItemModel.TitleRole)
+        pinned = index.data(ItemModel.PinRole)
 
-            if company:
-                point = option.rect.topLeft()
-                point.setY(point.y() - 20)
-                rectangle.setTopLeft(point)
-                pin_point.setY(pin_point.y() - 10)
-                pin_rect.setTopLeft(pin_point)
+        pin_point = rectangle.topLeft()
+        pin_point.setY(pin_point.y() + 32)
+        pin_rect.setTopLeft(pin_point)
+        point = option.rect.topLeft()
+        point.setY(point.y() - 40)
+        rectangle.setTopLeft(point)
+        pin_point.setY(pin_point.y() - 20)
+        pin_rect.setTopLeft(pin_point)
+        pin_rect.setHeight(16)
+        pin_rect.setWidth(16)
 
-            pin_rect.setHeight(16)
-            pin_rect.setWidth(16)
+        if pinned:
+            painter.drawImage(pin_rect, pin)
+            title = f'      {title}'
 
-            if pinned:
-                painter.drawImage(pin_rect, pin)
-                title = f'     {title}'
-            painter.drawText(rectangle, Qt.AlignVCenter, title)
+        painter.setPen(QColor(Color.TITLE.value))
+        painter.drawText(rectangle, Qt.AlignVCenter, title)
 
-        if company:
-            point = option.rect.topLeft()
-            point.setY(point.y() + 40)
-            rectangle.setTopLeft(point)
-            font.setPixelSize(12)
-            painter.setFont(font)
-            painter.drawText(rectangle, Qt.AlignVCenter, company)
+        # Draw company
+        company = index.data(ItemModel.CompanyRole)
+
+        point = option.rect.topLeft()
+        point.setY(point.y() + yoffset)
+        rectangle.setTopLeft(point)
+        font.setPixelSize(Style.FONT_SIZE.value)
+        painter.setFont(font)
+        painter.setPen(QColor(Color.COMPANY.value))
+        painter.drawText(rectangle, Qt.AlignVCenter, company)
+
+        # Draw location
+        location = index.data(ItemModel.LocationRole)
+
+        point = option.rect.topLeft()
+        point.setY(point.y() + yoffset)
+        rectangle.setTopLeft(point)
+        font.setPixelSize(Style.FONT_SIZE.value - 2)
+        painter.setFont(font)
+        painter.setPen(QColor(Color.LOCATION.value))
+        painter.drawText(rectangle, Qt.AlignVCenter, location)
 
         painter.restore()
