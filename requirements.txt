@@ -3,11 +3,14 @@ attrs==18.2.0
 beautifulsoup4==4.6.3
 certifi==2018.11.29
 chardet==3.0.4
+Click==7.0
 coverage==4.5.2
 coverage-badge==0.2.0
+decorator==4.3.0
 flake8==3.6.0
+future==0.17.1
+geocoder==1.38.1
 idna==2.8
--e git+https://github.com/reaper47/job-search-aggregator.git@0db2f5d3eb8052fc55b2074c694e49615c08878a#egg=job_search
 mccabe==0.6.1
 more-itertools==4.3.0
 pluggy==0.8.0
@@ -17,6 +20,7 @@ pyflakes==2.0.0
 PySide2==5.12.0
 pytest==4.0.1
 pytest-cov==2.6.0
+ratelim==0.1.6
 requests==2.21.0
 shiboken2==5.12.0
 six==1.12.0

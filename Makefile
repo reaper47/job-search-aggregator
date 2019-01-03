@@ -23,6 +23,7 @@ clean-test:
 	rm -fr htmlcov/
 
 install:
+	${PIP} install --upgrade pip
 	${PIP} install -r requirements.txt
 	${PIP} install -e .
 	make db
