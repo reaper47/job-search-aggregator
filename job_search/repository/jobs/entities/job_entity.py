@@ -71,8 +71,8 @@ class LocationEntity(Base):
     country_id = Column(Integer, ForeignKey(f'{COUNTRY_TABLE}.id'), nullable=False)
     country_entity = relationship('CountryEntity', backref='loc_country', uselist=False)
 
-    lat = Column(Float(precision=7), nullable=False)
-    lng = Column(Float(precision=7), nullable=False)
+    lat = Column(Float, nullable=False)
+    lng = Column(Float, nullable=False)
 
 
 class CityEntity(Base):
