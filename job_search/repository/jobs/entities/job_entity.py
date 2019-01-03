@@ -1,6 +1,6 @@
 from pathlib import Path
 from sqlalchemy import create_engine, ForeignKey, Column
-from sqlalchemy import Integer, String, Boolean, PickleType
+from sqlalchemy import Integer, Float, String, Boolean, PickleType
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -70,6 +70,9 @@ class LocationEntity(Base):
 
     country_id = Column(Integer, ForeignKey(f'{COUNTRY_TABLE}.id'), nullable=False)
     country_entity = relationship('CountryEntity', backref='loc_country', uselist=False)
+
+    lat = Column(Float(precision=7), nullable=False)
+    lng = Column(Float(precision=7), nullable=False)
 
 
 class CityEntity(Base):

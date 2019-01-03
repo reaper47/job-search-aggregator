@@ -21,7 +21,7 @@ def a_job() -> JobInfo:
     uid = 'PY-QCQC-PC-P'
     a_title = 'Pythonista'
     a_company = A_COMPANY
-    a_location = LocationInfo(city='Quebec City', state='Quebec', country=A_COUNTRY)
+    a_location = LocationInfo(city='Quebec City', state='Quebec', country=A_COUNTRY, lat=0, lng=0)
     a_description = 'This is a gold mine.'
     some_restrictions = [A_RESTRICTION, ANOTHER_RESTRICTION]
     some_requirements = [A_REQUIREMENT, ANOTHER_REQUIREMENT]

@@ -1,5 +1,6 @@
 from typing import Dict, List
 from urllib.parse import urlparse
+import job_search.utils.geohelpers as geohelpers
 from job_search.domain.jobs.value_objects.job_type import JobInfo, ContactInfo, LocationInfo, JobTypeSource
 from job_search.domain.jobs.value_objects.simple_objects import Job
 
@@ -52,9 +53,10 @@ class JobFactory:
         if len(location_split) == 3:
             state = location_split[1]
 
-        return LocationInfo(city=location_split[0],
-                            state=state,
-                            country=location_split[-1])
+        city, country = location_split[0], location_split[-1]
+        lat, lng = geohelpers.get_lat_lng(location)
+
+        return LocationInfo(city=city, state=state, country=country, lat=lat, lng=lng)
 
     def __contact_info_to_value_object(self, contact_info: Dict[str, str]) -> ContactInfo:
         contact, email, website = None, None, None

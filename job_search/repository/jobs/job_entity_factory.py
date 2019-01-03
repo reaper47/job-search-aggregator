@@ -64,7 +64,8 @@ class JobEntityFactory:
 
             location_entity = entities.LocationEntity(city_entity=city_entity,
                                                       state_entity=state_entity,
-                                                      country_entity=country_entity)
+                                                      country_entity=country_entity,
+                                                      lat=location.lat, lng=location.lng)
 
         return location_entity
 

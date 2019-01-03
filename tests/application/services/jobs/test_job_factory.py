@@ -1,3 +1,4 @@
+from unittest import mock
 import pytest
 from typing import Dict
 from job_search.application.services.jobs.job_factory import JobFactory
@@ -11,6 +12,7 @@ A_COUNTRY = 'United States of America'
 A_CONTACT = 'Ms. Zuras'
 AN_EMAIL = 'zuras@zuru.no'
 A_WEBSITE = 'zurulabs.com'
+MOCK_GEOHELPERS = 'job_search.application.services.jobs.job_factory.geohelpers'
 
 
 @pytest.fixture
@@ -33,21 +35,27 @@ def job_factory() -> JobFactory:
     return JobFactory()
 
 
-def test_whenCreatingAJob_thenGenerateAnId(a_job, job_factory):
+@mock.patch(MOCK_GEOHELPERS)
+def test_whenCreatingAJob_thenGenerateAnId(mock_geohelpers, a_job, job_factory):
+    mock_geohelpers.get_lat_lng.return_value = 0, 0
     job = job_factory.create_job(a_job, A_JOB_TYPE)
 
     id_expected = 'PY-NYCNYUSOA-ZL-PGE'
     assert id_expected == job.uid
 
 
-def test_whenCreatingAJob_thenStoreLocationInAValueObject(a_job, job_factory):
+@mock.patch(MOCK_GEOHELPERS)
+def test_whenCreatingAJob_thenStoreLocationInAValueObject(mock_geohelpers, a_job, job_factory):
+    mock_geohelpers.get_lat_lng.return_value = 0, 0
     job = job_factory.create_job(a_job, A_JOB_TYPE)
 
-    location_info_expected = LocationInfo(city=A_CITY, state=A_STATE, country=A_COUNTRY)
+    location_info_expected = LocationInfo(city=A_CITY, state=A_STATE, country=A_COUNTRY, lat=0, lng=0)
     assert location_info_expected == job.location
 
 
-def test_whenCreatingAJob_thenStoreContactInfoInAValueObject(a_job, job_factory):
+@mock.patch(MOCK_GEOHELPERS)
+def test_whenCreatingAJob_thenStoreContactInfoInAValueObject(mock_geohelpers, a_job, job_factory):
+    mock_geohelpers.get_lat_lng.return_value = 0, 0
     job = job_factory.create_job(a_job, A_JOB_TYPE)
 
     contact_info_expected = ContactInfo(contact=A_CONTACT, email=AN_EMAIL, website=A_WEBSITE)

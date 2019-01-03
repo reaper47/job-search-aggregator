@@ -8,7 +8,9 @@ class JobAssembler:
     def to_domain_object(self, job_entity: JobEntity) -> JobInfo:
         location = LocationInfo(city=job_entity.location_entity.city_entity.name,
                                 state=job_entity.location_entity.state_entity.name,
-                                country=job_entity.location_entity.country_entity.name)
+                                country=job_entity.location_entity.country_entity.name,
+                                lat=job_entity.location_entity.lat,
+                                lng=job_entity.location_entity.lng)
         restrictions = [x.name_entity.name for x in job_entity.restrictions_entity.restriction_entities]
         requirements = [x.name_entity.name for x in job_entity.requirements_entity.requirement_entities]
         contact_info = ContactInfo(contact=job_entity.contact_info_entity.name_entity.name,

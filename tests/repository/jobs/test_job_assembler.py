@@ -11,7 +11,8 @@ def test_givenANormalJobEntity_whenAssemblingAJob_thenReturnTheExpectedJob():
     a_company = entities.CompanyEntity(name='a company')
     a_location = entities.LocationEntity(city_entity=entities.CityEntity(name='munich'),
                                          state_entity=entities.StateEntity(name='bavaria'),
-                                         country_entity=entities.CountryEntity(name='germany'))
+                                         country_entity=entities.CountryEntity(name='germany'),
+                                         lat=0, lng=0)
     some_restrictions = __make_some_restrictions()
     some_requirements = __make_some_requirements()
     a_contact_info = __make_a_contact_info()

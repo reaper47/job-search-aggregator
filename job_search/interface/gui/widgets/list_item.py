@@ -88,7 +88,6 @@ class ItemDelegate(QStyledItemDelegate):
         style = options.widget.style()
         style.drawControl(QStyle.CE_ItemViewItem, options, painter)
         painter.save()
-
         rectangle = option.rect
 
         if option.state & QStyle.State_Selected:

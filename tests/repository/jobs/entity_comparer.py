@@ -22,7 +22,9 @@ def are_equivalent(job_info: JobInfo, job_entity: JobEntity) -> bool:
 def __are_locations_equivalent(location_info: LocationInfo, location_entity: LocationEntity) -> bool:
     return (location_info.city == location_entity.city_entity.name and
             location_info.state == location_entity.state_entity.name and
-            location_info.country == location_entity.country_entity.name)
+            location_info.country == location_entity.country_entity.name and
+            location_info.lat == location_entity.lat and
+            location_info.lng == location_info.lng)
 
 
 def __are_restrictions_equivalent(restrictions: List[str], restrictions_entity: List[RestrictionEntity]) -> bool:

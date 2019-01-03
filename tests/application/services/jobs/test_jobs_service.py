@@ -25,7 +25,7 @@ def a_job() -> JobInfo:
     uid = 'PY-QCQC-PC-P'
     a_title = 'Pythonista'
     a_company = 'Python Café'
-    a_location = LocationInfo(city='Quebec City', state='Quebec', country='Canada')
+    a_location = LocationInfo(city='Quebec City', state='Quebec', country='Canada', lat=0, lng=0)
     a_description = 'This is a gold mine.'
     some_restrictions = ['No telecommuting', 'No remote work available']
     some_requirements = ['No remote work available', 'Deep knowledge of Python 3']

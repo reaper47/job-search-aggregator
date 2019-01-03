@@ -37,15 +37,19 @@ class ContactInfo:
 
 class LocationInfo:
 
-    def __init__(self, city: str, state: str, country: str):
+    def __init__(self, city: str, state: str, country: str, lat: float, lng: float):
         self.city = city
         self.state = state
         self.country = country
+        self.lat = lat
+        self. lng = lng
 
     def __eq__(self, other):
         return (self.city == other.city and
                 self.state == other.state and
-                self.country == other.country)
+                self.country == other.country and
+                self.lat == other.lat and
+                self.lng == other. lng)
 
     def __str__(self):
         string = f'{self.city}, '

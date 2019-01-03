@@ -12,6 +12,9 @@ class Color(Enum):
 
 
 class Style(Enum):
+    ONE_THIRD = (1/3)*100
+    TWO_THIRDS = (2/3)*100
+    HALF = (1/2)*100
     FONT_SIZE = 12
     QMAIN_WINDOW = """
         QMainWindow {
@@ -45,6 +48,33 @@ class Style(Enum):
         }
         QScrollBar::sub-line:vertical {
             background: #2C3A47;
+            height: 20px;
+            subcontrol-position: top;
+            subcontrol-origin: margin;
+        }
+    """
+    INFO_PANEL = """
+        QTextEdit {
+            border: none;
+            background: #fff;
+        }
+        QLabel {
+            padding-bottom:  25px;
+        }
+        QPushButton {
+            padding:  12px;
+        }
+        QScrollBar:vertical {
+            border: none;
+            margin: 20px 0px 20px 0px;
+            width: 9px;
+        }
+        QScrollBar::add-line:vertical {
+            height: 20px;
+            subcontrol-position: bottom;
+            subcontrol-origin: margin;
+        }
+        QScrollBar::sub-line:vertical {
             height: 20px;
             subcontrol-position: top;
             subcontrol-origin: margin;

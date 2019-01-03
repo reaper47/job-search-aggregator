@@ -71,7 +71,24 @@ class JobSearchAggregator:
     def list_item_selected(self, index):
         job_id = self.uids[index.row()]
         job = self.job_service.consult_job(job_id)
-        print(job)
+        self.info_panel.title.setText(job.title)
+        self.info_panel.description.setPlainText(job.description)
+
+        restrictions = '\n\n'.join(job.restrictions)
+        self.info_panel.restrictions.setPlainText(restrictions)
+
+        requirements = '\n\n'.join(job.requirements)
+        self.info_panel.requirements.setPlainText(requirements)
+
+        add_marker = 'try { add_marker(' + f'{job.location.lat}, {job.location.lng})' + '} catch(e) {}'
+        self.info_panel.webpage.runJavaScript(add_marker)
+
+        about = '\n\n'.join(job.about)
+        self.info_panel.about.setPlainText(about)
+        self.info_panel.set_contact_info(job.contact_info.contact,
+                                         job.contact_info.email,
+                                         job.contact_info.website,
+                                         job.company)
 
 
 if __name__ == '__main__':
