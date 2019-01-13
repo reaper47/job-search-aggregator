@@ -44,7 +44,8 @@ def test_givenABrewedPythonSoup_whenFetchingJobs_thenScrapeInfoFromAllJobs(mock_
     a_job = Job(title='Quantitative Data Engineer',
                 company='Tudor Investment Corporation',
                 location='New York, New York, United States',
-                description=('We are looking for an outstanding engineer.\n'
+                description=('We are looking for an outstanding engineer.\n\n'
+                             '- Design\n- Explore\n- Eat\n\n'
                              'Your main tasks and responsibilities include stuff.'),
                 restrictions=['No telecommuting', 'No Agencies Please'],
                 requirements=['Proficiency in Python', 'Experience in Python', 'Experience in C'],

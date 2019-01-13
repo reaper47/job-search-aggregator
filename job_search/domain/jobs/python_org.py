@@ -80,7 +80,12 @@ class PythonOrg:
         description = ''
         child = self.__get_child_tag(parent)
         while child.name != 'h2':
-            description += f'{child.text}\n'
+            if child.name == 'ul':
+                for li in child.find_all('li'):
+                    description += f'- {li.text}\n'
+                description += '\n'
+            else:
+                description += f'{child.text}\n\n'
             child = self.__get_child_tag(child)
         return description.strip()
 

@@ -72,9 +72,7 @@ class JobSearchAggregator:
         job_id = self.uids[index.row()]
         job = self.job_service.consult_job(job_id)
         self.info_panel.title.setText(job.title)
-
-        description = job.description.replace('\n', '\n\n')
-        self.info_panel.description.setPlainText(description)
+        self.info_panel.description.setPlainText(job.description)
 
         restrictions = '\n\n'.join(job.restrictions)
         self.info_panel.restrictions.setPlainText(restrictions)
