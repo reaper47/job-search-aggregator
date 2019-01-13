@@ -72,7 +72,9 @@ class JobSearchAggregator:
         job_id = self.uids[index.row()]
         job = self.job_service.consult_job(job_id)
         self.info_panel.title.setText(job.title)
-        self.info_panel.description.setPlainText(job.description)
+
+        description = job.description.replace('\n', '\n\n')
+        self.info_panel.description.setPlainText(description)
 
         restrictions = '\n\n'.join(job.restrictions)
         self.info_panel.restrictions.setPlainText(restrictions)
@@ -83,8 +85,13 @@ class JobSearchAggregator:
         add_marker = 'try { add_marker(' + f'{job.location.lat}, {job.location.lng})' + '} catch(e) {}'
         self.info_panel.webpage.runJavaScript(add_marker)
 
-        about = '\n\n'.join(job.about)
+        about = ''
+        for el in job.about:
+            if el is list:
+                el = '\n'.join(el)
+            about += f'{el}\n\n'
         self.info_panel.about.setPlainText(about)
+
         self.info_panel.set_contact_info(job.contact_info.contact,
                                          job.contact_info.email,
                                          job.contact_info.website,

@@ -36,7 +36,7 @@ class ItemModel(QAbstractListModel):
 
     def data(self, index: QModelIndex, role=Qt.DisplayRole):
         item = self.getItem(index)
-       
+
         if role == Qt.SizeHintRole:
             return QSize(100, 80)
         elif role == ItemModel.TitleRole:

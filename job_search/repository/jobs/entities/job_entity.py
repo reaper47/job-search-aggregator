@@ -5,6 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
 JOB_TABLE = 'job'
+TITLE_TABLE = 'title'
 COMPANY_TABLE = 'company'
 LOCATION_TABLE = 'location'
 CONTACT_INFO_TABLE = 'contact_info'
@@ -29,7 +30,10 @@ class JobEntity(Base):
     __tablename__ = JOB_TABLE
 
     id = Column(String, autoincrement=False, nullable=False, primary_key=True)
-    title = Column(String)
+
+    title_id = Column(Integer, ForeignKey(f'{TITLE_TABLE}.id'), nullable=False)
+    title_entity = relationship('TitleEntity', backref='job_title', uselist=False)
+
     description = Column(String)
     about = Column(PickleType)
 
@@ -49,6 +53,13 @@ class JobEntity(Base):
     source_entity = relationship('SourceEntity', backref='job_src', uselist=False)
 
     pinned = Column(Boolean, default=False)
+
+
+class TitleEntity(Base):
+    __tablename__ = TITLE_TABLE
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False, unique=True)
 
 
 class CompanyEntity(Base):

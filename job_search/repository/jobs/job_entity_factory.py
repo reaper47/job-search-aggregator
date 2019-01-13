@@ -11,6 +11,7 @@ class JobEntityFactory:
         self.repository = repository
 
     def create_job_entity(self, job: JobInfo) -> entities.JobEntity:
+        title = self.__assemble_title_entity(job.title)
         company = self.__assemble_company_entity(job.company)
         source = self.__assemble_source_entity(job.source)
         location = self.__assemble_location_entity(job.location)
@@ -19,7 +20,7 @@ class JobEntityFactory:
         requirements = self.__assemble_requirements(job.requirements)
 
         return entities.JobEntity(id=job.uid,
-                                  title=job.title,
+                                  title_entity=title,
                                   description=job.description,
                                   about=job.about,
                                   company_entity=company,
@@ -32,6 +33,12 @@ class JobEntityFactory:
 
     def __rm_empty_strings(self, strings: List[str]) -> List[str]:
         return list(filter(lambda x: x, strings))
+
+    def __assemble_title_entity(self, title: str) -> entities.TitleEntity:
+        entity = self.repository.find_title(title)
+        if entity is None:
+            entity = entities.TitleEntity(name=title)
+        return entity
 
     def __assemble_company_entity(self, company: str) -> entities.CompanyEntity:
         entity = self.repository.find_company(company)

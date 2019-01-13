@@ -44,15 +44,15 @@ def test_givenABrewedPythonSoup_whenFetchingJobs_thenScrapeInfoFromAllJobs(mock_
     a_job = Job(title='Quantitative Data Engineer',
                 company='Tudor Investment Corporation',
                 location='New York, New York, United States',
-                description='We are looking for an outstanding engineer.',
+                description=('We are looking for an outstanding engineer.\n'
+                             'Your main tasks and responsibilities include stuff.'),
                 restrictions=['No telecommuting', 'No Agencies Please'],
                 requirements=['Proficiency in Python', 'Experience in Python', 'Experience in C'],
-                about=[],
+                about=['About us', ['Competitive salary', 'Supported learning'], 'Come work'],
                 contact_info={
                     'contact': 'Morgan Nelson',
                     'email': 'morgan.nelson@tudor.com',
-                    'website': 'https://boards.greenhouse.io/'
-                })
+                    'website': 'https://boards.greenhouse.io/'})
     jobs_expected = [a_job]*4
 
     jobs = python_org_brewed.fetch_jobs()

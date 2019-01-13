@@ -18,7 +18,7 @@ class JobAssembler:
                                    website=job_entity.contact_info_entity.website_entity.name)
 
         return JobInfo(uid=job_entity.id,
-                       title=job_entity.title,
+                       title=job_entity.title_entity.name,
                        company=job_entity.company_entity.name,
                        location=location,
                        description=job_entity.description,

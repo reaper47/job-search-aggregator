@@ -4,7 +4,7 @@ import job_search.repository.jobs.entities.job_entity as entities
 
 
 def test_givenANormalJobEntity_whenAssemblingAJob_thenReturnTheExpectedJob():
-    a_title = 'a title'
+    a_title = entities.TitleEntity(name='a title')
     a_description = 'a description'
     an_about = ['an', 'about', 'section']
     a_source = entities.SourceEntity(name='a source')
@@ -17,7 +17,7 @@ def test_givenANormalJobEntity_whenAssemblingAJob_thenReturnTheExpectedJob():
     some_requirements = __make_some_requirements()
     a_contact_info = __make_a_contact_info()
     is_pinned = False
-    a_job_entity = entities.JobEntity(title=a_title, description=a_description, about=an_about,
+    a_job_entity = entities.JobEntity(title_entity=a_title, description=a_description, about=an_about,
                                       company_entity=a_company, location_entity=a_location,
                                       restrictions_entity=some_restrictions,
                                       requirements_entity=some_requirements, pinned=is_pinned,

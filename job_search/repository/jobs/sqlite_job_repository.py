@@ -40,6 +40,9 @@ class SQLiteJobRepository(JobRepository):
                                 .all())
         return [self.assembler.to_domain_object(x) for x in all_jobs]
 
+    def find_title(self, title):
+        return self.session.query(entities.TitleEntity).filter_by(name=title).first()
+
     def find_company(self, company):
         return self.session.query(entities.CompanyEntity).filter_by(name=company).first()
 

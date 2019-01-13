@@ -7,7 +7,7 @@ from job_search.repository.jobs.entities.job_entity import (JobEntity, ContactIn
 
 def are_equivalent(job_info: JobInfo, job_entity: JobEntity) -> bool:
     return (job_info.uid == job_entity.id and
-            job_info.title == job_entity.title and
+            job_info.title == job_entity.title_entity.name and
             job_info.company == job_entity.company_entity.name and
             __are_locations_equivalent(job_info.location, job_entity.location_entity) and
             job_info.description == job_entity.description and

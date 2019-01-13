@@ -20,6 +20,10 @@ class JobRepository(metaclass=abc.ABCMeta):
         raise NotImplementedError('load is not implemented')
 
     @abc.abstractmethod
+    def find_title(self, title: str) -> entities.TitleEntity:
+        raise NotImplementedError('find_title is not implemented')
+
+    @abc.abstractmethod
     def find_company(self, company: str) -> entities.CompanyEntity:
         raise NotImplementedError('find_company is not implemented')
 

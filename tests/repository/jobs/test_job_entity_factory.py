@@ -40,6 +40,7 @@ def a_job() -> JobInfo:
 @pytest.fixture
 def mock_empty_repo():
     mock = Mock(spec=JobRepository)
+    mock.find_title.return_value = None
     mock.find_company.return_value = None
     mock.find_location.return_value = None
     mock.find_city.return_value = None
