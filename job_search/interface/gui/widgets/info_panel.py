@@ -66,8 +66,19 @@ class JobInfoPanel(QWidget):
                       "  marker = WE.marker([lat,lng]).addTo(earth);"
                       "  earth.setView([lat,lng], zoomLevel);}")
 
-        style = ("html, body{padding: 0; margin: 0;}"
-                 "#earth_div{top: 0; right: 0; bottom: 0; left: 0; position: absolute !important;}")
+        style = '''
+            html, body {
+              padding: 0;
+              margin: 0;
+            }
+            #earth_div {
+              top: 0;
+              right: 0;
+              bottom: 0;
+              left: 0;
+              position: absolute !important;
+            }
+        '''
 
         return f'''
             <!DOCTYPE HTML>

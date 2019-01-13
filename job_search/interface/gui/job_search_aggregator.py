@@ -1,5 +1,4 @@
 import sys
-from threading import Timer
 from PySide2.QtWidgets import QMainWindow, QDesktopWidget, QApplication, QDockWidget, QWidget, QAction
 from PySide2.QtCore import Qt
 from PySide2.QtGui import QIcon, QKeySequence
@@ -59,15 +58,10 @@ class JobSearchAggregator:
 
     def run(self):
         self.__populate_item_model()
-        Timer(0.25, self.__scheduled_task).start()
         self.list_view.select(0)
 
         self.main_window.show()
         sys.exit(self.app.exec_())
-
-    def __scheduled_task(self):
-        self.list_view.select(1)
-        self.list_view.select(0)
 
     def __populate_item_model(self):
         jobs = self.job_service.gather_all_jobs()

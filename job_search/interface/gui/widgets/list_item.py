@@ -36,17 +36,17 @@ class ItemModel(QAbstractListModel):
 
     def data(self, index: QModelIndex, role=Qt.DisplayRole):
         item = self.getItem(index)
-        if item is not None:
-            if role == Qt.SizeHintRole:
-                return QSize(100, 80)
-            elif role == ItemModel.TitleRole:
-                return item.title
-            elif role == ItemModel.CompanyRole:
-                return item.company
-            elif role == ItemModel.LocationRole:
-                return item.location
-            elif role == ItemModel.PinRole:
-                return item.pinned
+       
+        if role == Qt.SizeHintRole:
+            return QSize(100, 80)
+        elif role == ItemModel.TitleRole:
+            return item.title
+        elif role == ItemModel.CompanyRole:
+            return item.company
+        elif role == ItemModel.LocationRole:
+            return item.location
+        elif role == ItemModel.PinRole:
+            return item.pinned
 
     def getItem(self, index: QModelIndex):
         row = index.row()
