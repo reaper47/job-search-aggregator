@@ -91,16 +91,13 @@ class PythonOrg:
 
     def __get_requirements(self, parent: BeautifulSoup) -> List:
         requirements = []
-
         child = self.__get_child_tag(parent)
-        while child.name == 'p':
-            requirements.append(child.text)
+        while child.name != 'h2':
+            if child.name == 'p':
+                requirements.append(child.text)
+            elif child.name == 'ul':
+                requirements += list(map(lambda x: f'- {x}', self.__strip_list(child.text.split('\n'))))
             child = self.__get_child_tag(child)
-
-        while child.name == 'ul':
-            requirements += self.__strip_list(child.text.split('\n'))
-            child = self.__get_child_tag(child)
-
         return requirements
 
     def __get_about(self, parent: BeautifulSoup) -> List:

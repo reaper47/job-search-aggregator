@@ -48,7 +48,7 @@ def test_givenABrewedPythonSoup_whenFetchingJobs_thenScrapeInfoFromAllJobs(mock_
                              '- Design\n- Explore\n- Eat\n\n'
                              'Your main tasks and responsibilities include stuff.'),
                 restrictions=['No telecommuting', 'No Agencies Please'],
-                requirements=['Proficiency in Python', 'Experience in Python', 'Experience in C'],
+                requirements=['Proficiency in Python', '- Experience in Python', '- Experience in C', 'Django'],
                 about=['About us', ['Competitive salary', 'Supported learning'], 'Come work'],
                 contact_info={
                     'contact': 'Morgan Nelson',
