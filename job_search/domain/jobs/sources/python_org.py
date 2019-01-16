@@ -1,19 +1,20 @@
 from typing import List
 import requests
 from bs4 import BeautifulSoup, Tag
+from job_search.domain.jobs.job_source import JobSource
 from job_search.domain.jobs.value_objects.simple_objects import Job
 
 HTML = 'html.parser'
 
 
-class PythonOrg:
+class PythonOrg(JobSource):
 
     def __init__(self):
         self.website = 'https://www.python.org/jobs/'
         self.pagination_class = 'pagination menu'
         self.jobs_class = 'list-recent-jobs list-row-container menu'
 
-    def prepare_soup(self) -> None:
+    def prepare_soup(self):
         request = requests.get(self.website)
         job_posting = BeautifulSoup(request.text, features=HTML)
         self.pages = self.__get_pages(job_posting)
@@ -42,7 +43,7 @@ class PythonOrg:
 
         return len(pages)
 
-    def fetch_jobs(self) -> List[Job]:
+    def fetch_jobs(self):
         jobs_scraped = []
         for page in self.pages:
             all_jobs = page.find_all('ol', class_=self.jobs_class)[0].find_all('li')

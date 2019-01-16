@@ -42,8 +42,8 @@ def a_job() -> JobInfo:
 
 
 @pytest.fixture
-def job_service(mock_job_factory, mock_repo):
-    return JobService(mock_job_factory, mock_repo)
+def job_service(mock_repo):
+    return JobService(mock_repo)
 
 
 def test_whenConsultingAJob_thenReturnTheRightJob(a_job, job_service):

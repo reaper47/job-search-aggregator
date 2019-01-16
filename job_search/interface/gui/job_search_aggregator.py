@@ -7,7 +7,6 @@ from job_search.interface.gui.styles.styles import Style
 from job_search.interface.gui.widgets.info_panel import JobInfoPanel
 from job_search.interface.gui.widgets.jobs_list import ListView
 from job_search.application.services.jobs.job_service import JobService
-from job_search.application.services.jobs.job_factory import JobFactory
 from job_search.repository.jobs.sqlite_job_repository import SQLiteJobRepository
 
 
@@ -91,6 +90,6 @@ class JobSearchAggregator:
 
 
 if __name__ == '__main__':
-    service = JobService(JobFactory(), SQLiteJobRepository())
+    service = JobService(SQLiteJobRepository())
     app = JobSearchAggregator(service)
     app.run()

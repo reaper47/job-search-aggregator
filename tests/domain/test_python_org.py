@@ -2,7 +2,7 @@ from pathlib import Path
 from unittest import mock
 import pytest
 from tests.helpers.stubs import RequestsStub
-from job_search.domain.jobs.python_org import PythonOrg
+from job_search.domain.jobs.sources.python_org import PythonOrg
 from job_search.domain.jobs.value_objects.simple_objects import Job
 
 BASE_DIR = Path(__file__).parent
@@ -11,7 +11,7 @@ with open(f'{BASE_DIR}/samples/job_posting.html') as f:
 with open(f'{BASE_DIR}/samples/job_post.html') as f:
     A_JOB_POST = f.read()
 
-MOCK_REQUESTS = 'job_search.domain.jobs.python_org.requests'
+MOCK_REQUESTS = 'job_search.domain.jobs.sources.python_org.requests'
 
 
 @pytest.fixture
