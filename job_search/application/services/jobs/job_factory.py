@@ -1,5 +1,4 @@
 from typing import Dict, List
-from urllib.parse import urlparse
 import job_search.utils.geohelpers as geohelpers
 from job_search.domain.jobs.value_objects.job_type import JobInfo, ContactInfo, LocationInfo, JobTypeSource
 from job_search.domain.jobs.value_objects.simple_objects import Job
@@ -25,9 +24,6 @@ class JobFactory:
                        pinned=False)
 
     def __generate_id(self, source: str, location: str, company: str, title: str) -> str:
-        source_name = urlparse(source).netloc.split('.')[1]
-        source_initials = source_name[:2].upper()
-
         location_split = [y for x in location.split(',') for y in x.split(' ')]
         location_split = self.__rm_empty_strings(location_split)
         location_initials = self.__mk_initials(location_split)
@@ -38,7 +34,7 @@ class JobFactory:
         title_split = self.__rm_empty_strings(title.split(' '))
         title_initials = self.__mk_initials(title_split)
 
-        return f'{source_initials}-{location_initials}-{company_initials}-{title_initials}'
+        return f'{location_initials}-{company_initials}-{title_initials}'
 
     def __rm_empty_strings(self, strings: List[str]) -> List[str]:
         return list(filter(lambda x: x, strings))

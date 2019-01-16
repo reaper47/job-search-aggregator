@@ -6,7 +6,7 @@ import job_search.repository.jobs.entities.job_entity as entities
 def test_givenANormalJobEntity_whenAssemblingAJob_thenReturnTheExpectedJob():
     a_title = entities.TitleEntity(name='a title')
     a_description = 'a description'
-    an_about = ['an', 'about', 'section']
+    an_about = 'an about section'
     a_source = entities.SourceEntity(name='a source')
     a_company = entities.CompanyEntity(name='a company')
     a_location = entities.LocationEntity(city_entity=entities.CityEntity(name='munich'),

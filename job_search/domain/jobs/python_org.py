@@ -70,13 +70,13 @@ class PythonOrg:
         return Job(title=title_tag.next_sibling.strip(),
                    company=self.__strip_list(company_tag.text.split('\n'))[-1],
                    location=job.find('span', class_='listing-location').text,
-                   description=self.__get_description(descr_tag),
+                   description=self.__get_about_and_description(descr_tag),
                    restrictions=self.__strip_list(self.__get_child_tag(restr_tag).text.split('\n')),
                    requirements=self.__get_requirements(reqs_tag),
-                   about=self.__get_about(about_tag),
+                   about=self.__get_about_and_description(about_tag),
                    contact_info=self.__get_contact_info(contact_tag))
 
-    def __get_description(self, parent: BeautifulSoup) -> str:
+    def __get_about_and_description(self, parent: BeautifulSoup) -> str:
         description = ''
         child = self.__get_child_tag(parent)
         while child.name != 'h2':
@@ -99,17 +99,6 @@ class PythonOrg:
                 requirements += list(map(lambda x: f'- {x}', self.__strip_list(child.text.split('\n'))))
             child = self.__get_child_tag(child)
         return requirements
-
-    def __get_about(self, parent: BeautifulSoup) -> List:
-        about = []
-        child = self.__get_child_tag(parent)
-        while child.name != 'h2':
-            if child.name == 'ul':
-                about.append(self.__strip_list(child.text.split('\n')))
-            else:
-                about.append(child.text)
-            child = self.__get_child_tag(child)
-        return about
 
     def __get_contact_info(self, parent: BeautifulSoup) -> List:
         child = self.__get_child_tag(parent)

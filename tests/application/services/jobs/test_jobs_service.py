@@ -22,7 +22,7 @@ def mock_repo(a_job):
 
 @pytest.fixture
 def a_job() -> JobInfo:
-    uid = 'PY-QCQC-PC-P'
+    uid = 'QCQC-PC-P'
     a_title = 'Pythonista'
     a_company = 'Python Café'
     a_location = LocationInfo(city='Quebec City', state='Quebec', country='Canada', lat=0, lng=0)

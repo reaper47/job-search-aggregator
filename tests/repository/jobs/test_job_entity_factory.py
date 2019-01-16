@@ -25,7 +25,7 @@ def a_job() -> JobInfo:
     a_description = 'This is a gold mine.'
     some_restrictions = [A_RESTRICTION, ANOTHER_RESTRICTION]
     some_requirements = [A_REQUIREMENT, ANOTHER_REQUIREMENT]
-    an_about = ['Python Café is the number one company in providing caffeine to its employees']
+    an_about = 'Python Café is the number one company in providing caffeine to its employees'
     a_contact_info = ContactInfo(contact='Mr. Joshua', email='josh@python.org', website='https://www.pcafe.org')
     a_source = JobTypeSource.PYTHON_ORG.value
     is_pinned = False

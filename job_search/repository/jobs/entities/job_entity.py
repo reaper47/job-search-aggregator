@@ -1,6 +1,6 @@
 from pathlib import Path
 from sqlalchemy import create_engine, ForeignKey, Column
-from sqlalchemy import Integer, Float, String, Boolean, PickleType
+from sqlalchemy import Integer, Float, String, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -35,7 +35,7 @@ class JobEntity(Base):
     title_entity = relationship('TitleEntity', backref='job_title', uselist=False)
 
     description = Column(String)
-    about = Column(PickleType)
+    about = Column(String)
 
     company_id = Column(Integer, ForeignKey(f'{COMPANY_TABLE}.id'), nullable=False)
     company_entity = relationship('CompanyEntity', backref='job_company', uselist=False)

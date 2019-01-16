@@ -24,10 +24,7 @@ def a_job() -> Dict:
                restrictions=['No telecommuting'],
                requirements=['None'],
                about=['Zuru Labs', 'The best laboratory on Earth'],
-               contact_info={
-                   'contact': A_CONTACT,
-                   'email': AN_EMAIL,
-                   'website': A_WEBSITE})
+               contact_info={'contact': A_CONTACT, 'email': AN_EMAIL, 'website': A_WEBSITE})
 
 
 @pytest.fixture
@@ -40,7 +37,7 @@ def test_whenCreatingAJob_thenGenerateAnId(mock_geohelpers, a_job, job_factory):
     mock_geohelpers.get_lat_lng.return_value = 0, 0
     job = job_factory.create_job(a_job, A_JOB_TYPE)
 
-    id_expected = 'PY-NYCNYUSOA-ZL-PGE'
+    id_expected = 'NYCNYUSOA-ZL-PGE'
     assert id_expected == job.uid
 
 
