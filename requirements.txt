@@ -8,7 +8,7 @@ coverage==4.5.2
 coverage-badge==0.2.0
 decorator==4.3.0
 flake8==3.6.0
-future==0.17.1
+future==0.18.3
 geocoder==1.38.1
 idna==2.8
 mccabe==0.6.1
